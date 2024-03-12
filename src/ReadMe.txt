@@ -1,4 +1,4 @@
-Go to this link and add ranger_base.dae to this folder
+Go to this link and add ranger_base.dae to ranger_mini_v2_description/meshes/components path
 
 https://drive.google.com/file/d/1_UuPcv1ym_S12IVnqwNedrEESKhfejYF/view?usp=sharing
 
