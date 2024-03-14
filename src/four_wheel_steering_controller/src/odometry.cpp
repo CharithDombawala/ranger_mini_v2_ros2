@@ -88,6 +88,14 @@ namespace Odometry
     rear_steer_vel_acc_.accumulate((rear_steer_vel_prev_ - rear_steering)/dt);
     rear_steer_vel_prev_ = rear_steering;
 
+    std::cout << "----values in odometry cpp------ \n"
+          << " steering_track_: " << steering_track_ << std::endl
+          << " wheel_steering_y_offset_: " << wheel_steering_y_offset_ << std::endl
+          << " wheel_radius_: " << wheel_radius_ << std::endl
+          << " wheel_base_: " << wheel_base_ << std::endl
+          << " wheel_old_pos_: " << wheel_old_pos_ << std::endl;
+
+
     return true;
   }
 

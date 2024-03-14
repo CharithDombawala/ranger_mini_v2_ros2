@@ -45,7 +45,4 @@ s
     <xacro:wheel_assembly_b prefix="rear_left_wheel" parent_link="base_link" x="-0.23" y="0.206" z="-0.1" roll="0" pitch="0" yaw="3.14159"/>
     <xacro:wheel_assembly_a prefix="rear_right_wheel" parent_link="base_link" x="-0.23" y="-0.206" z="-0.1" roll="0" pitch="0" yaw="3.14159"/>
 
-    
-    
-
 </robot>

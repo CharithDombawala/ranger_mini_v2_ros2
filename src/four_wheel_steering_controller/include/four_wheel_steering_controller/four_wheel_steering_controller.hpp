@@ -172,6 +172,7 @@ private:
   CommandTwist last1_cmd_;
   CommandTwist last0_cmd_;
   
+  int reverse=1;
 
   const int velocity_rolling_window_size =10.0;
 
