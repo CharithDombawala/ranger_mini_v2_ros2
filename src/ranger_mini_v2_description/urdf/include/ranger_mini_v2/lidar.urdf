@@ -40,7 +40,7 @@
     <gazebo reference="laser_frame">
         <sensor name="laser" type="ray">
             <pose> 0 0 0 0 0 0 </pose>
-            <visualize>true</visualize>
+            <visualize>false</visualize>
             <update_rate>50</update_rate>
             <ray>
                 <scan>

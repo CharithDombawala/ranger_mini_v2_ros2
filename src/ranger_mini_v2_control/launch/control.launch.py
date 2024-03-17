@@ -1,11 +1,13 @@
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument,IncludeLaunchDescription,RegisterEventHandler
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
-
+import os
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
@@ -99,11 +101,15 @@ def generate_launch_description():
             on_exit=[robot_controller_spawner],
         )
     )
-
+    ranger_mini_joystick_launch = os.path.join(get_package_share_directory('ranger_mini_v2_control'),'launch/joystick.launch.py')
+    Include_joy_node=IncludeLaunchDescription(PythonLaunchDescriptionSource([ranger_mini_joystick_launch]),)
+    
+    
     nodes = [
         control_node,
         joint_state_broadcaster_spawner,
         # delay_rviz_after_joint_state_broadcaster_spawner,
+        Include_joy_node,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
     ]
 

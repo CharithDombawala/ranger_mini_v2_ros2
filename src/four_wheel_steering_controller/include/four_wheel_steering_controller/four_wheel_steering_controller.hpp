@@ -172,7 +172,13 @@ private:
   CommandTwist last1_cmd_;
   CommandTwist last0_cmd_;
   
-  int reverse=1;
+  int reverse_fl=1;
+  int reverse_fr=1;
+  int reverse_rl=1;
+  int reverse_rr=1;
+
+
+  //double publish_period;
 
   const int velocity_rolling_window_size =10.0;
 
@@ -188,7 +194,7 @@ private:
 
   bool enable_twist_cmd_;
 
-  bool enable_odom_tf_;
+  bool enable_odom_tf_=true;
 
 };
 }

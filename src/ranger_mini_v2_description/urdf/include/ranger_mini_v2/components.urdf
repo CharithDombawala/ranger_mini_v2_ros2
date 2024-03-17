@@ -81,6 +81,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
             <child link="${prefix}_steering"/>
             <axis xyz="0 0 1" rpy="0 0 0" />
             <limit effort="5" velocity="6.28"  lower="-2.1" upper="2.1" />
+            <!-- <limit effort="5" velocity="6.28"  lower="-7.0" upper="7.0" /> -->
         </joint>
 
         <xacro:wheel prefix="${prefix}" parent_link="${prefix}_steering" x="0.03" y="0.01" z="-0.12" roll="0" pitch="0" yaw="0"/>
@@ -116,6 +117,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
             <child link="${prefix}_steering"/>
             <axis xyz="0 0 1" rpy="0 0 0" />
             <limit effort="5" velocity="6.28"  lower="-2.1" upper="2.1" />
+            <!-- <limit effort="5" velocity="6.28"  lower="-7.0" upper="7.0" /> -->
         </joint>
 
         <xacro:wheel prefix="${prefix}" parent_link="${prefix}_steering" x="0.0" y="0.0" z="-0.12" roll="0" pitch="0" yaw="0"/>
@@ -158,5 +160,3 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     </xacro:macro>
 
 </robot>
-
-

@@ -36,8 +36,14 @@ namespace Odometry
 
   bool Odometry::update(const double &fl_speed, const double &fr_speed,
                         const double &rl_speed, const double &rr_speed,
-                        double front_steering, double rear_steering, const rclcpp::Time &time)
+                        double front_steering, double rear_steering, const rclcpp::Time &time,bool lin_y)
   {
+
+    //  if(lin_y==true) //swaping steering_track_ and wheel_base_
+    // { 
+    //    steering_track_   = 0.494;
+    //    wheel_base_       = 0.364;
+    // }
     const double front_tmp = cos(front_steering)*(tan(front_steering)-tan(rear_steering))/wheel_base_;
     const double front_left_tmp = front_tmp/sqrt(1-steering_track_*front_tmp*cos(front_steering)
                                                +pow(steering_track_*front_tmp/2,2));
@@ -63,12 +69,26 @@ namespace Odometry
     linear_x_ = (front_linear_speed*cos(front_steering) + rear_linear_speed*cos(rear_steering))/2.0;
     linear_y_ = (front_linear_speed*sin(front_steering) - wheel_base_*angular_/2.0
                 + rear_linear_speed*sin(rear_steering) + wheel_base_*angular_/2.0)/2.0;
+    // if(lin_y==true)
+    // {
+    // linear_y_ = (front_linear_speed*cos(front_steering) + rear_linear_speed*cos(rear_steering))/2.0;
+    // linear_x_ = 0.0;
+    // linear_x_ = (front_linear_speed*sin(front_steering) - wheel_base_*angular_/2.0
+    //             + rear_linear_speed*sin(rear_steering) + wheel_base_*angular_/2.0)/2.0;
+    // }
+    // else
+    // {
+    // linear_x_ = (front_linear_speed*cos(front_steering) + rear_linear_speed*cos(rear_steering))/2.0;
+    // linear_y_ = (front_linear_speed*sin(front_steering) - wheel_base_*angular_/2.0
+    //             + rear_linear_speed*sin(rear_steering) + wheel_base_*angular_/2.0)/2.0;
+    // }
+
     linear_ =  copysign(1.0, rear_linear_speed)*sqrt(pow(linear_x_,2)+pow(linear_y_,2));
 
     /// Compute x, y and heading using velocity
 
   
-    const double dt = (time.nanoseconds() - last_update_timestamp_.nanoseconds())/1e9;
+    const double dt = (time.seconds() - last_update_timestamp_.seconds());
 
     if (dt < 0.0001)
       return false; // Interval too small to integrate with

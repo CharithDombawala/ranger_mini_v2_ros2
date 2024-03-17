@@ -25,7 +25,7 @@ public:
 
   
     bool update(const double& fl_speed, const double& fr_speed, const double& rl_speed, const double& rr_speed,
-                double front_steering, double rear_steering, const rclcpp::Time &time);
+                double front_steering, double rear_steering, const rclcpp::Time &time,bool lin_y=false);
 
 
     double getHeading() const
