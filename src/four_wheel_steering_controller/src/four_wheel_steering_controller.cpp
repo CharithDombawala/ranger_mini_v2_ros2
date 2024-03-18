@@ -352,69 +352,65 @@ controller_interface::return_type FourWheelSteeringController::update_and_write_
 
 void FourWheelSteeringController::updateOdometry(const rclcpp::Time& time)
 { 
-  double fl_steering=0.0;
-  double rl_steering=0.0;
-  double fr_steering=0.0;
-  double rr_steering=0.0;
+//   double fl_steering=0.0;
+//   double rl_steering=0.0;
+//   double fr_steering=0.0;
+//   double rr_steering=0.0;
 
-  double fl_speed=0.0;
-  double rl_speed=0.0;
-  double fr_speed=0.0;
-  double rr_speed=0.0;
+//   double fl_speed=0.0;
+//   double rl_speed=0.0;
+//   double fr_speed=0.0;
+//   double rr_speed=0.0;
 
-  CommandTwist curr_cmd_twist = *(command_twist_.readFromRT());
+//   CommandTwist curr_cmd_twist = *(command_twist_.readFromRT());
 
- if (fabs(curr_cmd_twist.lin_y) > 0.001 && fabs(curr_cmd_twist.lin_x) < 0.001 )
- {
-  double sign =copysign(1.0,curr_cmd_twist.lin_y);
-  fl_speed = sign*reverse_fr*state_interfaces_[STATE_TRACTION_FRONT_RIGHT_WHEEL].get_value();
-  rl_speed = sign*reverse_fl*state_interfaces_[STATE_TRACTION_FRONT_LEFT_WHEEL].get_value();
-  fr_speed = sign*reverse_rr*state_interfaces_[STATE_TRACTION_REAR_RIGHT_WHEEL].get_value();
-  rr_speed = sign*reverse_rl*state_interfaces_[STATE_TRACTION_REAR_LEFT_WHEEL].get_value();
+//  if (fabs(curr_cmd_twist.lin_y) > 0.001 && fabs(curr_cmd_twist.lin_x) < 0.001 )  //testing   // for parallel and ackerman swaping the robot wheel speeds and wheel stering to check odom
+//  {
+//   double sign =copysign(1.0,curr_cmd_twist.lin_y); //even though robot moving according to both minus and plus y velociteis, state values are always possitive
+//   fl_speed = sign*reverse_fr*state_interfaces_[STATE_TRACTION_FRONT_RIGHT_WHEEL].get_value();
+//   rl_speed = sign*reverse_fl*state_interfaces_[STATE_TRACTION_FRONT_LEFT_WHEEL].get_value();
+//   fr_speed = sign*reverse_rr*state_interfaces_[STATE_TRACTION_REAR_RIGHT_WHEEL].get_value();
+//   rr_speed = sign*reverse_rl*state_interfaces_[STATE_TRACTION_REAR_LEFT_WHEEL].get_value();
 
-  fl_steering = state_interfaces_[STATE_STEER_FRONT_RIGHT_WHEEL].get_value();
-  rl_steering = state_interfaces_[STATE_STEER_FRONT_LEFT_WHEEL].get_value();
-  fr_steering = state_interfaces_[STATE_STEER_REAR_RIGHT_WHEEL].get_value();
-  rr_steering = state_interfaces_[STATE_STEER_REAR_LEFT_WHEEL].get_value();
+//   fl_steering = state_interfaces_[STATE_STEER_FRONT_RIGHT_WHEEL].get_value();
+//   rl_steering = state_interfaces_[STATE_STEER_FRONT_LEFT_WHEEL].get_value();
+//   fr_steering = state_interfaces_[STATE_STEER_REAR_RIGHT_WHEEL].get_value();
+//   rr_steering = state_interfaces_[STATE_STEER_REAR_LEFT_WHEEL].get_value();
 
- }
- else
- {
-  fr_speed = reverse_fr*state_interfaces_[STATE_TRACTION_FRONT_RIGHT_WHEEL].get_value();
-  fl_speed = reverse_fl*state_interfaces_[STATE_TRACTION_FRONT_LEFT_WHEEL].get_value();
-  rr_speed = reverse_rr*state_interfaces_[STATE_TRACTION_REAR_RIGHT_WHEEL].get_value();
-  rl_speed = reverse_rl*state_interfaces_[STATE_TRACTION_REAR_LEFT_WHEEL].get_value();
+//  }
+//  else // other all cases // as  orginal code
+//  {
+//   fr_speed = reverse_fr*state_interfaces_[STATE_TRACTION_FRONT_RIGHT_WHEEL].get_value();
+//   fl_speed = reverse_fl*state_interfaces_[STATE_TRACTION_FRONT_LEFT_WHEEL].get_value();
+//   rr_speed = reverse_rr*state_interfaces_[STATE_TRACTION_REAR_RIGHT_WHEEL].get_value();
+//   rl_speed = reverse_rl*state_interfaces_[STATE_TRACTION_REAR_LEFT_WHEEL].get_value();
 
-  fr_steering = state_interfaces_[STATE_STEER_FRONT_RIGHT_WHEEL].get_value();
-  fl_steering = state_interfaces_[STATE_STEER_FRONT_LEFT_WHEEL].get_value();
-  rr_steering = state_interfaces_[STATE_STEER_REAR_RIGHT_WHEEL].get_value();
-  rl_steering = state_interfaces_[STATE_STEER_REAR_LEFT_WHEEL].get_value(); 
- }
-
-
+//   fr_steering = state_interfaces_[STATE_STEER_FRONT_RIGHT_WHEEL].get_value();
+//   fl_steering = state_interfaces_[STATE_STEER_FRONT_LEFT_WHEEL].get_value();
+//   rr_steering = state_interfaces_[STATE_STEER_REAR_RIGHT_WHEEL].get_value();
+//   rl_steering = state_interfaces_[STATE_STEER_REAR_LEFT_WHEEL].get_value(); 
+//  }
 
 
 
-  // // COMPUTE AND PUBLISH ODOMETRY
-  // const double fr_speed = reverse_fr*state_interfaces_[STATE_TRACTION_FRONT_RIGHT_WHEEL].get_value();
-  // const double fl_speed = reverse_fl*state_interfaces_[STATE_TRACTION_FRONT_LEFT_WHEEL].get_value();
-  // const double rr_speed = reverse_rr*state_interfaces_[STATE_TRACTION_REAR_RIGHT_WHEEL].get_value();
-  // const double rl_speed = reverse_rl*state_interfaces_[STATE_TRACTION_REAR_LEFT_WHEEL].get_value();
+
+
+  // COMPUTE AND PUBLISH ODOMETRY
+  const double fr_speed = reverse_fr*state_interfaces_[STATE_TRACTION_FRONT_RIGHT_WHEEL].get_value();
+  const double fl_speed = reverse_fl*state_interfaces_[STATE_TRACTION_FRONT_LEFT_WHEEL].get_value();
+  const double rr_speed = reverse_rr*state_interfaces_[STATE_TRACTION_REAR_RIGHT_WHEEL].get_value();
+  const double rl_speed = reverse_rl*state_interfaces_[STATE_TRACTION_REAR_LEFT_WHEEL].get_value();
 
   if (std::isnan(fl_speed) || std::isnan(fr_speed)
       || std::isnan(rl_speed) || std::isnan(rr_speed))
     
     return;
     
-  // const double fr_steering = state_interfaces_[STATE_STEER_FRONT_RIGHT_WHEEL].get_value();
-  // const double fl_steering = state_interfaces_[STATE_STEER_FRONT_LEFT_WHEEL].get_value();
-  // const double rr_steering = state_interfaces_[STATE_STEER_REAR_RIGHT_WHEEL].get_value();
-  // const double rl_steering = state_interfaces_[STATE_STEER_REAR_LEFT_WHEEL].get_value();
+  const double fr_steering = state_interfaces_[STATE_STEER_FRONT_RIGHT_WHEEL].get_value();
+  const double fl_steering = state_interfaces_[STATE_STEER_FRONT_LEFT_WHEEL].get_value();
+  const double rr_steering = state_interfaces_[STATE_STEER_REAR_RIGHT_WHEEL].get_value();
+  const double rl_steering = state_interfaces_[STATE_STEER_REAR_LEFT_WHEEL].get_value();
 
-  // const double fl_steering = state_interfaces_[STATE_STEER_FRONT_RIGHT_WHEEL].get_value();
-  // const double rl_steering = state_interfaces_[STATE_STEER_FRONT_LEFT_WHEEL].get_value();
-  // const double fr_steering = state_interfaces_[STATE_STEER_REAR_RIGHT_WHEEL].get_value();
-  // const double rr_steering = state_interfaces_[STATE_STEER_REAR_LEFT_WHEEL].get_value();
 
  
 
@@ -450,14 +446,14 @@ void FourWheelSteeringController::updateOdometry(const rclcpp::Time& time)
   //RCLCPP_INFO(get_node()->get_logger(),"rl_steering %f rr_steering %f rear_steering_pos %f",rl_steering,rr_steering,rear_steering_pos);
   // Estimate linear and angular velocity using joint information
 
- if (fabs(curr_cmd_twist.lin_y) > 0.001 && fabs(curr_cmd_twist.lin_x) < 0.001 )
- {
-    odometry.update(fl_speed, fr_speed, rl_speed, rr_speed,front_steering_pos, rear_steering_pos, time,true);
- }
- else
- {
+//  if (fabs(curr_cmd_twist.lin_y) > 0.001 && fabs(curr_cmd_twist.lin_x) < 0.001 ) 
+//  {
+//     odometry.update(fl_speed, fr_speed, rl_speed, rr_speed,front_steering_pos, rear_steering_pos, time,true); // to check swapping robot wheel speeds 
+//  }
+//  else
+//  {
     odometry.update(fl_speed, fr_speed, rl_speed, rr_speed,front_steering_pos, rear_steering_pos, time);
- }
+ //}
 
  rclcpp::Clock clock;
   // Publish odometry message
