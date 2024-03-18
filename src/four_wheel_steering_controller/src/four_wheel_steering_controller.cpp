@@ -415,7 +415,7 @@ void FourWheelSteeringController::updateOdometry(const rclcpp::Time& time)
  
 
   RCLCPP_INFO(get_node()->get_logger(),
-                             " writing values in state_interfaces_. \n"
+                             " reading values in state_interfaces_. \n"
                              " vel_right_front: %f \n"
                              " vel_left_front: %f \n"
                              " vel_right_rear: %f \n"
@@ -424,7 +424,7 @@ void FourWheelSteeringController::updateOdometry(const rclcpp::Time& time)
                              " front_left_steering: %f \n"
                              " rear_right_steering: %f \n"
                              " rear_left_steering: %f \n",
-                             fl_speed,fr_speed,rr_speed,rl_speed,
+                             fr_speed,fl_speed,rr_speed,rl_speed,
                              fr_steering,fl_steering,rr_steering,rl_steering);
 
   if (std::isnan(fl_steering) || std::isnan(fr_steering)
