@@ -69,10 +69,11 @@ namespace Odometry
     linear_x_ = (front_linear_speed*cos(front_steering) + rear_linear_speed*cos(rear_steering))/2.0;
     linear_y_ = (front_linear_speed*sin(front_steering) - wheel_base_*angular_/2.0
                 + rear_linear_speed*sin(rear_steering) + wheel_base_*angular_/2.0)/2.0;
+    
     // if(lin_y==true)
     // {
+
     // linear_y_ = (front_linear_speed*cos(front_steering) + rear_linear_speed*cos(rear_steering))/2.0;
-    // linear_x_ = 0.0;
     // linear_x_ = (front_linear_speed*sin(front_steering) - wheel_base_*angular_/2.0
     //             + rear_linear_speed*sin(rear_steering) + wheel_base_*angular_/2.0)/2.0;
     // }
