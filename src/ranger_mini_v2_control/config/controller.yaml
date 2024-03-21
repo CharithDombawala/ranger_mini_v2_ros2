@@ -35,7 +35,7 @@ four_wheel_steering_controller:
     # wheel_separation : 0.122
     wheel_separation_h : 0.36
     wheel_separation_w : 0.34317
-    wheel_radius : 0.085
+    wheel_radius : 0.09
     wheel_steering_y_offset : -0.1
     # wheel_steering_x_offset : 0.03
 

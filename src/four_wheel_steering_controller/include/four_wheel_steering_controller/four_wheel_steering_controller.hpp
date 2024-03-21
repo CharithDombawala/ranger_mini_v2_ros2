@@ -71,8 +71,8 @@ public:
   FOUR_WHEEL_STEERING_CONTROLLER__VISIBILITY_PUBLIC controller_interface::InterfaceConfiguration
   state_interface_configuration() const override;
 
-  FOUR_WHEEL_STEERING_CONTROLLER__VISIBILITY_PUBLIC bool update_odometry(
-    const rclcpp::Duration & period);
+  // FOUR_WHEEL_STEERING_CONTROLLER__VISIBILITY_PUBLIC bool update_odometry(
+  //   const rclcpp::Duration & period);
 
   FOUR_WHEEL_STEERING_CONTROLLER__VISIBILITY_PUBLIC controller_interface::CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override;
@@ -126,10 +126,10 @@ protected:
   double publish_rate_ = 50.0;
   bool use_stamped_vel_ = true;
 
-  const double wheel_base_ = 0.494;  // needs to figure out
-  const double track_ = 0.364;                     // needs to figure out
-  const double wheel_radius_ = 0.085; 
-  const double wheel_steering_y_offset_ = -0.1;
+  const double wheel_base_ = 0.46; //0.494;  // needs to figure out
+  const double track_ = 0.412; //0.364;                     // needs to figure out
+  const double wheel_radius_ = 0.09; //0.085; 
+  const double wheel_steering_y_offset_ = 0.0;
 
   std::vector<std::string> rear_wheels_state_names_ = {"front_right_wheel_joint", "front_left_wheel_joint"};
   std::vector<std::string> front_wheels_state_names_ = {"rear_right_wheel_joint", "rear_left_wheel_joint"};
@@ -142,6 +142,8 @@ protected:
 private:
   
   rclcpp::Duration publish_period_;
+  rclcpp::Time last_time_;
+  rclcpp::Time current_time_;
   rclcpp::Time last_state_publish_time_;
 
   /// Velocity command related:
@@ -166,7 +168,7 @@ private:
 
   std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry> > odom_pub_;
   std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::msg::TFMessage> > tf_odom_pub_;
-  Odometry::Odometry odometry;
+  Odometry odometry;
 
 
   CommandTwist last1_cmd_;
@@ -177,6 +179,7 @@ private:
   int reverse_rl=1;
   int reverse_rr=1;
 
+  int MOTION_MODE;
 
   //double publish_period;
 
@@ -192,7 +195,7 @@ private:
 
   std::string odom_frame_id_;
 
-  bool enable_twist_cmd_;
+  bool enable_odom_pub_=true;
 
   bool enable_odom_tf_=true;
 

@@ -84,7 +84,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
             <!-- <limit effort="5" velocity="6.28"  lower="-7.0" upper="7.0" /> -->
         </joint>
 
-        <xacro:wheel prefix="${prefix}" parent_link="${prefix}_steering" x="0.03" y="0.01" z="-0.12" roll="0" pitch="0" yaw="0"/>
+        <!-- <xacro:wheel prefix="${prefix}" parent_link="${prefix}_steering" x="0.03" y="0.01" z="-0.12" roll="0" pitch="0" yaw="0"/> -->
+        <xacro:wheel prefix="${prefix}" parent_link="${prefix}_steering" x="0.0" y="0.0" z="-0.12" roll="0" pitch="0" yaw="0"/>
 
     </xacro:macro>
 
@@ -141,7 +142,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
             <collision>
                 <origin xyz="0 0 0" rpy="1.57 0 0" />
                 <geometry>
-                    <cylinder length="0.08" radius="0.08" />
+                    <!-- <cylinder length="0.08" radius="0.08" /> -->
+                    <cylinder length="0.001" radius="0.09" />
                 </geometry>
                 <contact>
                     <ode>

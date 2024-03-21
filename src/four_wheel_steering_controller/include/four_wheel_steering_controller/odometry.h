@@ -5,114 +5,139 @@
 #pragma once
 #include <tuple>
 #include <vector>
+#include <string>
+#include <memory>
+#include <cmath>
 #include "realtime_tools/realtime_buffer.h"
 #include "realtime_tools/realtime_publisher.h"
 #include "rcppmath/rolling_mean_accumulator.hpp"
+#include <geometry_msgs/msg/twist.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include "boost/numeric/odeint.hpp"
 
-
-namespace Odometry
+namespace four_wheel_steering_controller
 {
-  
+
+template <typename Model>
+class MotionModel {
+ public:
+  using State = typename Model::state_type;
+  using Command = typename Model::control_type;
+
+ public:
+  State StepForward(State x0, Command u, double t0, double tf, double dt) {
+    State x = x0;
+    boost::numeric::odeint::integrate_const(
+        boost::numeric::odeint::runge_kutta4<typename Model::state_type>(),
+        Model(u), x, t0, tf, dt);
+    return x;
+  }
+};
+
+class DualAckermanModel {
+ public:
+  using state_type = std::vector<double>;
+
+  struct control_type 
+  {
+    double v;
+    double phi;
+  };
+
+ public:
+  DualAckermanModel(double L, control_type u) : L_(L), u_(u){};
+
+  // x1 = x, x2 = y, x3 = theta
+  void operator()(const state_type& x, state_type& xd, double) 
+  {
+    xd[0] = u_.v * std::cos(u_.phi) * std::cos(x[2]);
+    xd[1] = u_.v * std::cos(u_.phi) * std::sin(x[2]);
+    xd[2] = 2 * u_.v * std::sin(u_.phi) / L_;
+  }
+
+ private:
+  double L_;
+  control_type u_;
+};
+
+class ParallelModel 
+{
+ public:
+  using state_type = std::vector<double>;
+
+  struct control_type 
+  {
+    double v;
+    double phi;
+  };
+
+ public:
+  ParallelModel(control_type u) : u_(u){};
+
+  // x1 = x, x2 = y, x3 = theta
+  void operator()(const state_type& x, state_type& xd, double) 
+  {
+    xd[0] = u_.v * std::cos(x[2] + u_.phi);
+    xd[1] = u_.v * std::sin(x[2] + u_.phi);
+    xd[2] = 0;
+  }
+
+ private:
+  control_type u_;
+};
+
+class SpinningModel 
+{
+ public:
+  using state_type = std::vector<double>;
+
+  struct control_type 
+  {
+    double w;
+  };
+
+ public:
+  SpinningModel(control_type u) : u_(u){};
+
+  // x1 = x, x2 = y, x3 = theta
+  void operator()(const state_type& x, state_type& xd, double) {
+    xd[0] = 0;
+    xd[1] = 0;
+    xd[2] = u_.w;
+  }
+
+ private:
+  control_type u_;
+};
+ 
 class Odometry
 {
-public:
-
-
-    Odometry(size_t velocity_rolling_window_size = 10);
-
-
-    void init(const rclcpp::Time & time);
-
+  public:
   
-    bool update(const double& fl_speed, const double& fr_speed, const double& rl_speed, const double& rr_speed,
-                double front_steering, double rear_steering, const rclcpp::Time &time,bool lin_y=false);
+  double getX() { return position_x_; }
 
+  double getY() { return position_y_; }
 
-    double getHeading() const
-    {
-      return heading_;
-    }
+  geometry_msgs::msg::Quaternion get_orientation() { return odom_quat; }
 
-    double getX() const
-    {
-      return x_;
-    }
+  double ConvertInnerAngleToCentral(double angle);
 
+  void UpdateOdometry(int motion_mode, double linear, double angular, double angle, double dt);
 
-    double getY() const
-    {
-      return y_;
-    }
+  double position_x_ = 0.0;
+  double position_y_ = 0.0;
+  double theta_ = 0.0;
 
+  geometry_msgs::msg::Quaternion odom_quat;
 
-    double getLinear() const
-    {
-      return linear_;
-    }
-
-
-    double getLinearX() const
-    {
-      return linear_x_;
-    }
-
-
-    double getLinearY() const
-    {
-      return linear_y_;
-    }
-
-    double getAngular() const
-    {
-      return angular_;
-    }
-
-
-    bool setWheelParams(double steering_track, double wheel_steering_y_offset, double wheel_radius, double wheel_base);
-
-  
-    void setVelocityRollingWindowSize(size_t velocity_rolling_window_size);
 
   private:
 
-    void integrateXY(double linear_x, double linear_y, double angular);
-
-    void integrateRungeKutta2(double linear, double angular);
-
-
-    void integrateExact(double linear, double angular);
-
-    void resetAccumulators();
-
-    /// Current timestamp:
-    rclcpp::Time last_update_timestamp_;
-
-    /// Current pose:
-    double x_;        //   [m]
-    double y_;        //   [m]
-    double heading_;  // [rad]
-
-    /// Current velocity:
-    double linear_, linear_x_, linear_y_;  //   [m/s]
-    double angular_; // [rad/s]
-
-    /// Wheel kinematic parameters [m]:
-    double steering_track_;
-    double wheel_steering_y_offset_;
-    double wheel_radius_;
-    double wheel_base_;
-
-    /// Previous wheel position/state [rad]:
-    double wheel_old_pos_;
-
-    /// Rolling mean accumulators for the linar and angular velocities:
-    size_t velocity_rolling_window_size_;
-    rcppmath::RollingMeanAccumulator<double> linear_accel_acc_;
-    rcppmath::RollingMeanAccumulator<double> linear_jerk_acc_;
-    rcppmath::RollingMeanAccumulator<double> front_steer_vel_acc_;
-    rcppmath::RollingMeanAccumulator<double> rear_steer_vel_acc_;
-    double linear_vel_prev_, linear_accel_prev_;
-    double front_steer_vel_prev_, rear_steer_vel_prev_;
+  geometry_msgs::msg::Quaternion createQuaternionMsgFromYaw(double yaw);
+ 
+  const double wheelbase =0.46; //0.492; //  // needs to figure out
+  const double track = 0.412; //0.39; //.364;                     // needs to figure out
+ 
   };
 }
 

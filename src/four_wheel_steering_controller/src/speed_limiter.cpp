@@ -38,8 +38,8 @@ namespace four_wheel_steering_controller
     has_jerk_limits = false,
     min_velocity=-1.667;
     max_velocity=1.667;
-    min_acceleration=-1;
-    max_acceleration=1;
+    min_acceleration=-4; //-1 // TODO get this from param file
+    max_acceleration=4;  // 1 // TODO get this from param file
 
     limit_jerk(v, v0, v1, dt);
     limit_acceleration(v, v0, dt);
@@ -58,8 +58,8 @@ namespace four_wheel_steering_controller
     has_jerk_limits = false,
     min_velocity=-3.14;
     max_velocity=3.14;
-    min_acceleration=-1;
-    max_acceleration=1;
+    min_acceleration= -3; //-1; // TODO get this from param file
+    max_acceleration= 3; //1; // TODO get this from param file
 
     limit_jerk(v, v0, v1, dt);
     limit_acceleration(v, v0, dt);
