@@ -11,7 +11,7 @@
 #include "geometry_msgs/msg/quaternion.hpp"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "controller_interface/controller_interface_base.hpp"
-#include "/home/charith-2204/ranger_mini_v2/src/four_wheel_steering_controller/include/four_wheel_steering_controller/four_wheel_steering_controller.hpp"
+#include "four_wheel_steering_controller/four_wheel_steering_controller.hpp"
 #include "controller_interface/helpers.hpp"
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
@@ -346,19 +346,6 @@ namespace four_wheel_steering_controller
       return;
     }
 
-    RCLCPP_INFO(get_node()->get_logger(),
-                               " reading values in state_interfaces_. \n"
-                               " vel_right_front: %f \n"
-                               " vel_left_front: %f \n"
-                               " vel_right_rear: %f \n"
-                               " vel_left_rear: %f \n"
-                               " front_right_steering: %f \n"
-                               " front_left_steering: %f \n"
-                               " rear_right_steering: %f \n"
-                               " rear_left_steering: %f \n",
-                               fr_speed,fl_speed,rr_speed,rl_speed,
-                               fr_steering,fl_steering,rr_steering,rl_steering);
-
     double front_steering_pos = 0.0;
     if (fabs(fl_steering) > 0.001 || fabs(fr_steering) > 0.001)
     {
@@ -371,7 +358,6 @@ namespace four_wheel_steering_controller
     }
     const double steering_track_ = track_;
 
-    CommandTwist curr_cmd_twist = *(command_twist_.readFromRT());
 
     const double front_tmp = cos(front_steering_pos) * (tan(front_steering_pos) - tan(rear_steering_pos)) / wheel_base_;
     const double front_left_tmp = front_tmp / sqrt(1 - front_steering_pos * front_tmp * cos(front_steering_pos) + pow(steering_track_ * front_tmp / 2, 2));
@@ -387,11 +373,14 @@ namespace four_wheel_steering_controller
     const double rr_speed_tmp = rr_speed * (1 / (1 - wheel_steering_y_offset_ * rear_right_tmp));
     const double rear_linear_speed = wheel_radius_ * copysign(1.0, rl_speed_tmp + rr_speed_tmp) * sqrt((pow(rl_speed_tmp, 2) + pow(rr_speed_tmp, 2)) / (2 + pow(steering_track_ * rear_tmp, 2) / 2.0));
 
+    int sign_ang=1; 
     double angle = 0.0;
     double angular_=0.0;
     double linear_x_=0.00;
     double linear_y_=0.00;
     double inner_radius=std::hypot((steering_track_/2), (wheel_base_/2));
+    CommandTwist curr_cmd_twist = *(command_twist_.readFromRT());
+
 
 
     if (MOTION_MODE==2) //spining
@@ -402,7 +391,9 @@ namespace four_wheel_steering_controller
     } 
     else if (MOTION_MODE==3) //dual ackerman
     {
-    angle=0.0;   //needs to fix for dualackerman  for Y
+    
+    sign_ang=copysign(1,curr_cmd_twist.lin_x)*copysign(1,curr_cmd_twist.ang);
+    angle=std::max(fabs(fl_steering), fabs(fr_steering));  //TODO: handling dualackerman  for lin_Y
     angular_ = 2*wheel_radius_*(sin(fr_steering)*fr_speed+sin(fr_steering)*rr_speed+sin(fr_steering)*fr_speed+sin(fr_steering)*rr_speed)/(4*wheel_base_);
     linear_x_ = (front_linear_speed * cos(front_steering_pos) + rear_linear_speed * cos(rear_steering_pos)) / 2.0;
     linear_y_ = copysign(fabs((front_linear_speed * sin(front_steering_pos) - wheel_base_ * angular_ / 2.0 + rear_linear_speed * sin(rear_steering_pos) + wheel_base_ * angular_ / 2.0) / 2.0), curr_cmd_twist.lin_y);
@@ -419,16 +410,14 @@ namespace four_wheel_steering_controller
     
     double linear = copysign(1.0, rear_linear_speed) * sqrt(pow(linear_x_, 2) + pow(linear_y_, 2));
 
-    RCLCPP_INFO(get_node()->get_logger(), "angular speed: %.2f  linear_x: %.2f linear_y_: %.2f", angular_, linear_x_, linear_y_);
-
-    
+    RCLCPP_INFO(get_node()->get_logger(), "angular speed: %.2f  linear_x: %.2f rear_linear_speed: %.2f", angular_, linear_x_, rear_linear_speed);
 
     // double linear = std::hypot((curr_cmd_twist.lin_x),(curr_cmd_twist.lin_y));
     // double angular = curr_cmd_twist.ang;
 
     current_time_ = time;
     double dt = (current_time_.seconds() - last_time_.seconds());    
-    odometry.UpdateOdometry(MOTION_MODE, linear, angular_, angle, dt);
+    odometry.UpdateOdometry(MOTION_MODE, linear,angular_, angle, sign_ang, dt);
 
     rclcpp::Clock clock;
     if (last_state_publish_time_ + publish_period_ < clock.now())
@@ -451,7 +440,6 @@ namespace four_wheel_steering_controller
           odom_pub_->msg_.twist.twist.linear.x = 0;
           odom_pub_->msg_.twist.twist.linear.y = 0;
           odom_pub_->msg_.twist.twist.angular.z = 0;
-          odom_pub_->unlockAndPublish();
         }
         else if (MOTION_MODE == 3) // ackerman
         {
@@ -459,7 +447,6 @@ namespace four_wheel_steering_controller
           odom_pub_->msg_.twist.twist.linear.x = linear_x_;
           odom_pub_->msg_.twist.twist.linear.y = 0.0;
           odom_pub_->msg_.twist.twist.angular.z = angular_;
-          odom_pub_->unlockAndPublish();
         }
         else if (MOTION_MODE == 1) // parallel
         {
@@ -467,16 +454,14 @@ namespace four_wheel_steering_controller
           odom_pub_->msg_.twist.twist.linear.x = linear_x_ ;
           odom_pub_->msg_.twist.twist.linear.y = linear_y_;
           odom_pub_->msg_.twist.twist.angular.z = 0;
-          odom_pub_->unlockAndPublish();
         }
         else if (MOTION_MODE == 2) // spining
         {
           odom_pub_->msg_.twist.twist.linear.x = 0;
           odom_pub_->msg_.twist.twist.linear.y = 0;
           odom_pub_->msg_.twist.twist.angular.z = angular_;
-          odom_pub_->unlockAndPublish();
         }
-
+      odom_pub_->unlockAndPublish();
         
       }
       // Publish tf /odom frame

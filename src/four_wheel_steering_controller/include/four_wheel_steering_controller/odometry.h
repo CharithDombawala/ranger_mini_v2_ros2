@@ -122,7 +122,7 @@ class Odometry
 
   double ConvertInnerAngleToCentral(double angle);
 
-  void UpdateOdometry(int motion_mode, double linear, double angular, double angle, double dt);
+  void UpdateOdometry(int motion_mode, double linear, double angular, double angle,double sign_ang, double dt);
 
   double position_x_ = 0.0;
   double position_y_ = 0.0;

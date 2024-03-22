@@ -1,4 +1,4 @@
-#include </home/charith-2204/ranger_mini_v2/src/four_wheel_steering_controller/include/four_wheel_steering_controller/odometry.h>
+#include <four_wheel_steering_controller/odometry.h>
 #include <cmath>
 #include <iostream>
 #include <boost/bind.hpp>
@@ -6,7 +6,7 @@
 namespace four_wheel_steering_controller
 {
 
-void Odometry::UpdateOdometry(int MOTION_MODE, double linear, double angular,double angle, double dt) 
+void Odometry::UpdateOdometry(int MOTION_MODE, double linear, double angular,double angle,double sign_ang, double dt) 
 {
 
 
@@ -15,7 +15,7 @@ void Odometry::UpdateOdometry(int MOTION_MODE, double linear, double angular,dou
     DualAckermanModel::state_type x = {position_x_, position_y_, theta_};
     DualAckermanModel::control_type u;
     u.v = linear;
-    u.phi = ConvertInnerAngleToCentral(angle);
+    u.phi = sign_ang*ConvertInnerAngleToCentral(angle);
     
     boost::numeric::odeint::integrate_const(
         boost::numeric::odeint::runge_kutta4<DualAckermanModel::state_type>(),
@@ -75,9 +75,18 @@ double Odometry::ConvertInnerAngleToCentral(double angle)
   double phi = 0;
   double phi_i = std::abs(angle);
 
-  phi = std::atan(wheelbase * std::sin(phi_i) /
+
+  phi = std::atan(wheelbase * std::sin(phi_i) /  // x Ackerman
                   (wheelbase * std::cos(phi_i) +
                    track * std::sin(phi_i)));
+
+  // phi = std::atan(wheelbase * std::sin(phi_i) /  // y ackerman
+  //                 (wheelbase * std::cos(phi_i) +
+  //                  track * std::sin(phi_i)));                 
+
+  // phi = std::atan(wheelbase * std::sin(phi_i) /
+  //                 (track  * std::cos(phi_i) +
+  //                  wheelbase* std::sin(phi_i)));
 
   phi *= angle >= 0 ? 1.0 : -1.0;
   return phi;
