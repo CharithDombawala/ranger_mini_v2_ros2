@@ -22,6 +22,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   control_msgs
   tf2
   tf2_geometry_msgs
+  gazebo_msgs
 )    
 
 find_package(ament_cmake REQUIRED)

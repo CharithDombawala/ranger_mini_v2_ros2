@@ -18,7 +18,7 @@ ARGUMENTS = [
 
 
 def generate_launch_description():
-    pkg_ranger_ignition = get_package_share_directory('ranger_mini_v2_gazebo')
+    pkg_ranger_gazebo = get_package_share_directory('ranger_mini_v2_gazebo')
     pkg_ranger_navigation = get_package_share_directory('ranger_mini_v2_navigation')
     pkg_nav2_bringup = get_package_share_directory('nav2_bringup')
 
@@ -31,7 +31,7 @@ def generate_launch_description():
     map_arg = DeclareLaunchArgument(
 	'map',
 	default_value=PathJoinSubstitution(
-	[pkg_ranger_ignition, 'map', 'floor_map.yaml']),
+	[pkg_ranger_gazebo, 'map', 'map.yaml']),
 	description='Full path to map yaml file to load')
 
     namespace = LaunchConfiguration('namespace')

@@ -17,17 +17,19 @@
 #include "realtime_tools/realtime_publisher.h"
 #include "std_srvs/srv/set_bool.hpp"
 
-//#include "/home/charith-2204/ranger_mini_v2/src/four_wheel_steering_msgs/msg/FourWheelSteeeringStamped.hpp"
 #include "four_wheel_steering_controller/speed_limiter.hpp"
 #include "four_wheel_steering_controller/odometry.h"
 #include "four_wheel_steering_controller/visibility_control.hpp"
-//#include "/home/charith-2204/ranger_mini_v2/src/four_wheel_steering_controller/include/four_wheel_steeering_controller_parameter.hpp"
 
 #include "control_msgs/msg/steering_controller_status.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "tf2_msgs/msg/tf_message.hpp"
+#include <gazebo_msgs/msg/link_states.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+
 
 namespace four_wheel_steering_controller 
 {
@@ -95,7 +97,9 @@ public:
   FOUR_WHEEL_STEERING_CONTROLLER__VISIBILITY_LOCAL void cmdVelCallback(const geometry_msgs::msg::Twist& command);
   void updateOdometry(const rclcpp::Time& time);
   void updateCommand(const rclcpp::Time& time, const rclcpp::Duration& period);
-   
+  void callback(const gazebo_msgs::msg::LinkStates &msg);
+
+  
 protected:
 
   controller_interface::CallbackReturn set_interface_numbers(size_t nr_state_itfs, size_t nr_cmd_itfs, size_t nr_ref_itfs);
@@ -104,6 +108,7 @@ protected:
   // four_wheel_steering_controller::Params swerve_params_;
  
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr vel_subscriber_twist_ = nullptr;
+  rclcpp::Subscription<gazebo_msgs::msg::LinkStates>::SharedPtr gazebo_pose_subscription_ = nullptr;
   rclcpp::Duration ref_timeout_ = rclcpp::Duration::from_seconds(0.0);// 0ms
   
   using ControllerStatePublisherOdom = realtime_tools::RealtimePublisher<ControllerStateMsgOdom>;
@@ -165,6 +170,16 @@ private:
 
   realtime_tools::RealtimeBuffer<CommandTwist> command_twist_;
   CommandTwist command_struct_twist_;
+  double position_x;
+  double position_y;
+  double orientation_x;
+  double orientation_y;
+  double orientation_z;
+  double orientation_w;
+
+
+
+   
 
   std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry> > odom_pub_;
   std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::msg::TFMessage> > tf_odom_pub_;

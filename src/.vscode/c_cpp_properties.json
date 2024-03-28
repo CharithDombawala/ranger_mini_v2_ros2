@@ -35,7 +35,6 @@
                 "/opt/ros/humble/include/rcl_interfaces",
                 "/home/charith-2204/ranger_mini_v2/src/four_wheel_steering_controller/include",
                 "${workspaceFolder}",
-                "/home/charith-2204/ranger_mini_v2/src/four_wheel_steering_msgs/msg",
                 "/opt/ros/humble/include/realtime_tools",
                 "${workspaceFolder}/urdf_geometry_parser/include",
                 "/opt/ros/humble/include/urdf",
@@ -46,13 +45,13 @@
                 "/opt/ros/humble/include/steering_controllers_library_parameters",
                 "/opt/ros/humble/include/parameter_traits",
                 "/opt/ros/humble/include/rsl",
-                "/opt/ros/humble/include/ackermann_msgs",
                 "/opt/ros/humble/include/control_msgs",
                 "/opt/ros/humble/include/control_msgs",
                 "/home/charith-2204/ranger_mini_v2/src/four_wheel_steering_controller/include/four_wheel_steering_controller",
                 "/opt/ros/humble/include/tf2",
                 "/opt/ros/humble/include/tf2_geometry_msgs",
-                "/opt/ros/humble/include/tf2_ros"
+                "/opt/ros/humble/include/tf2_ros",
+                "/opt/ros/humble/include/gazebo_msgs"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

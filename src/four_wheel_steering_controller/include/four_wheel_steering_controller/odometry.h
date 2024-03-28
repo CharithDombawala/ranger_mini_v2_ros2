@@ -15,6 +15,11 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include "boost/numeric/odeint.hpp"
 
+// #include <geometry_msgs/msg/pose.hpp>
+// #include <geometry_msgs/msg/point.hpp>
+//#include <gazebo_msgs/gazebo_msgs/srv/get_entity_state.hpp>
+
+
 namespace four_wheel_steering_controller
 {
 
@@ -130,6 +135,11 @@ class Odometry
 
   geometry_msgs::msg::Quaternion odom_quat;
 
+  //struct GetEntityState : rclcpp::Service<gazebo_msgs::srv::GetEntityState> {};
+
+  //std::tuple<double, double, double> getPose(const std::string& robot_name, rclcpp::Node::SharedPtr nh); 
+  
+  //double callback(const geometry_msgs::msg::LinkState::SharedPtr msg);
 
   private:
 

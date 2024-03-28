@@ -27,6 +27,13 @@
 #include <boost/chrono/thread_clock.hpp>
 #include <rclcpp/time.hpp>
 
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <rclcpp/logging.hpp>
+
+
+
+
 // namespace
 
 // {
@@ -129,11 +136,17 @@ namespace four_wheel_steering_controller
         "/cmd_vel", subscribers_qos,
         std::bind(&FourWheelSteeringController::cmdVelCallback, this, std::placeholders::_1));
 
+      
+    gazebo_pose_subscription_ = get_node()->create_subscription<gazebo_msgs::msg::LinkStates>(
+        "/gazebo/link_states", subscribers_qos,
+        std::bind(&FourWheelSteeringController::callback, this,std::placeholders::_1));
+      
+
     try
     {
       // Odom state publisher
       odom_s_publisher_ = get_node()->create_publisher<nav_msgs::msg::Odometry>(
-          "/odometry", rclcpp::SystemDefaultsQoS());
+          "/odom", rclcpp::SystemDefaultsQoS());
       odom_pub_ = std::make_unique<ControllerStatePublisherOdom>(odom_s_publisher_);
     }
     catch (const std::exception &e)
@@ -165,7 +178,7 @@ namespace four_wheel_steering_controller
     {
       // Tf State publisher
       tf_odom_s_publisher_ = get_node()->create_publisher<ControllerStateMsgTf>(
-          "/tf_odometry", rclcpp::SystemDefaultsQoS());
+          "/tf", rclcpp::SystemDefaultsQoS());
       tf_odom_pub_ =
           std::make_unique<ControllerStatePublisherTf>(tf_odom_s_publisher_);
     }
@@ -237,21 +250,26 @@ namespace four_wheel_steering_controller
     {
       state_interfaces_config.names.push_back(
           front_wheels_state_names_[i] + "/" + hardware_interface::HW_IF_VELOCITY);
+      
+          
     }
     for (size_t i = 0; i < rear_wheels_state_names_.size(); i++)
     {
       state_interfaces_config.names.push_back(
           rear_wheels_state_names_[i] + "/" + hardware_interface::HW_IF_VELOCITY);
+       
     }
     for (size_t i = 0; i < front_steering_state_names_.size(); i++)
     {
       state_interfaces_config.names.push_back(
           front_steering_state_names_[i] + "/" + hardware_interface::HW_IF_POSITION);
+       
     }
     for (size_t i = 0; i < rear_steering_state_names_.size(); i++)
     {
       state_interfaces_config.names.push_back(
           rear_steering_state_names_[i] + "/" + hardware_interface::HW_IF_POSITION);
+       
     }
 
     return state_interfaces_config;
@@ -356,29 +374,29 @@ namespace four_wheel_steering_controller
     {
       rear_steering_pos = atan(2 * tan(rl_steering) * tan(rr_steering) / (tan(rl_steering) + tan(rr_steering)));
     }
-    const double steering_track_ = track_;
 
+    //calculating linear velocities
 
     const double front_tmp = cos(front_steering_pos) * (tan(front_steering_pos) - tan(rear_steering_pos)) / wheel_base_;
-    const double front_left_tmp = front_tmp / sqrt(1 - front_steering_pos * front_tmp * cos(front_steering_pos) + pow(steering_track_ * front_tmp / 2, 2));
-    const double front_right_tmp = front_tmp / sqrt(1 + steering_track_ * front_tmp * cos(front_steering_pos) + pow(steering_track_ * front_tmp / 2, 2));
+    const double front_left_tmp = front_tmp / sqrt(1 - front_steering_pos * front_tmp * cos(front_steering_pos) + pow(track_ * front_tmp / 2, 2));
+    const double front_right_tmp = front_tmp / sqrt(1 + track_ * front_tmp * cos(front_steering_pos) + pow(track_ * front_tmp / 2, 2));
     const double fl_speed_tmp = fl_speed * (1 / (1 - wheel_steering_y_offset_ * front_left_tmp));
     const double fr_speed_tmp = fr_speed * (1 / (1 - wheel_steering_y_offset_ * front_right_tmp));
-    const double front_linear_speed = wheel_radius_ * copysign(1.0, fl_speed_tmp + fr_speed_tmp) * sqrt((pow(fl_speed, 2) + pow(fr_speed, 2)) / (2 + pow(steering_track_ * front_tmp, 2) / 2.0));
+    const double front_linear_speed = wheel_radius_ * copysign(1.0, fl_speed_tmp + fr_speed_tmp) * sqrt((pow(fl_speed, 2) + pow(fr_speed, 2)) / (2 + pow(track_ * front_tmp, 2) / 2.0));
 
     const double rear_tmp = cos(rear_steering_pos) * (tan(front_steering_pos) - tan(rear_steering_pos)) / wheel_base_;
-    const double rear_left_tmp = rear_tmp / sqrt(1 - steering_track_ * rear_tmp * cos(rear_steering_pos) + pow(steering_track_ * rear_tmp / 2, 2));
-    const double rear_right_tmp = rear_tmp / sqrt(1 + steering_track_ * rear_tmp * cos(rear_steering_pos) + pow(steering_track_ * rear_tmp / 2, 2));
+    const double rear_left_tmp = rear_tmp / sqrt(1 - track_ * rear_tmp * cos(rear_steering_pos) + pow(track_ * rear_tmp / 2, 2));
+    const double rear_right_tmp = rear_tmp / sqrt(1 + track_ * rear_tmp * cos(rear_steering_pos) + pow(track_ * rear_tmp / 2, 2));
     const double rl_speed_tmp = rl_speed * (1 / (1 - wheel_steering_y_offset_ * rear_left_tmp));
     const double rr_speed_tmp = rr_speed * (1 / (1 - wheel_steering_y_offset_ * rear_right_tmp));
-    const double rear_linear_speed = wheel_radius_ * copysign(1.0, rl_speed_tmp + rr_speed_tmp) * sqrt((pow(rl_speed_tmp, 2) + pow(rr_speed_tmp, 2)) / (2 + pow(steering_track_ * rear_tmp, 2) / 2.0));
+    const double rear_linear_speed = wheel_radius_ * copysign(1.0, rl_speed_tmp + rr_speed_tmp) * sqrt((pow(rl_speed_tmp, 2) + pow(rr_speed_tmp, 2)) / (2 + pow(track_ * rear_tmp, 2) / 2.0));
 
     int sign_ang=1; 
     double angle = 0.0;
     double angular_=0.0;
     double linear_x_=0.00;
     double linear_y_=0.00;
-    double inner_radius=std::hypot((steering_track_/2), (wheel_base_/2));
+    double inner_radius=std::hypot((track_/2), (wheel_base_/2));
     CommandTwist curr_cmd_twist = *(command_twist_.readFromRT());
 
 
@@ -410,14 +428,13 @@ namespace four_wheel_steering_controller
     
     double linear = copysign(1.0, rear_linear_speed) * sqrt(pow(linear_x_, 2) + pow(linear_y_, 2));
 
-    RCLCPP_INFO(get_node()->get_logger(), "angular speed: %.2f  linear_x: %.2f rear_linear_speed: %.2f", angular_, linear_x_, rear_linear_speed);
+    RCLCPP_INFO(get_node()->get_logger(), "angular speed: %.2f  linear_x: %.2f linear_y_: %.2f", angular_, linear_x_, linear_y_);
 
-    // double linear = std::hypot((curr_cmd_twist.lin_x),(curr_cmd_twist.lin_y));
-    // double angular = curr_cmd_twist.ang;
+    // current_time_ = time;
+    // double dt = (current_time_.seconds() - last_time_.seconds());    
+    // odometry.UpdateOdometry(MOTION_MODE, linear,angular_, angle, sign_ang, dt);
+    // last_time_ = current_time_;
 
-    current_time_ = time;
-    double dt = (current_time_.seconds() - last_time_.seconds());    
-    odometry.UpdateOdometry(MOTION_MODE, linear,angular_, angle, sign_ang, dt);
 
     rclcpp::Clock clock;
     if (last_state_publish_time_ + publish_period_ < clock.now())
@@ -427,10 +444,17 @@ namespace four_wheel_steering_controller
       if (odom_pub_->trylock())
       {
           odom_pub_->msg_.header.stamp = time;
-          odom_pub_->msg_.pose.pose.position.x = odometry.getX();
-          odom_pub_->msg_.pose.pose.position.y = odometry.getY();
+          // odom_pub_->msg_.pose.pose.position.x = odometry.getX();
+          // odom_pub_->msg_.pose.pose.position.y = odometry.getY();
+          odom_pub_->msg_.pose.pose.position.x = position_x;
+          odom_pub_->msg_.pose.pose.position.y = position_y;
           odom_pub_->msg_.pose.pose.position.z = 0.0;
-          odom_pub_->msg_.pose.pose.orientation = odometry.get_orientation();
+          odom_pub_->msg_.pose.pose.orientation.x = orientation_x;
+          odom_pub_->msg_.pose.pose.orientation.y = orientation_y;
+          odom_pub_->msg_.pose.pose.orientation.z = orientation_z;
+          odom_pub_->msg_.pose.pose.orientation.w = orientation_w;
+
+
 
         if ((fabs(curr_cmd_twist.lin_x) < 0.001) && //when robot stoped
             (fabs(curr_cmd_twist.lin_y) < 0.001) &&
@@ -469,13 +493,18 @@ namespace four_wheel_steering_controller
       {
         geometry_msgs::msg::TransformStamped &odom_frame = tf_odom_pub_->msg_.transforms[0];
         odom_frame.header.stamp = time;
-        odom_frame.transform.translation.x = odometry.getX();
-        odom_frame.transform.translation.y = odometry.getY();
-        odom_frame.transform.rotation = odometry.get_orientation();
+        odom_frame.transform.translation.x = position_x;
+        odom_frame.transform.translation.y = position_y;
+        odom_frame.transform.rotation.x = orientation_x;
+        odom_frame.transform.rotation.y = orientation_y;
+        odom_frame.transform.rotation.z = orientation_z;
+        odom_frame.transform.rotation.w = orientation_w;
+
+
         tf_odom_pub_->unlockAndPublish();
       }
     }
-    last_time_ = current_time_;
+    //last_time_ = current_time_;
   }
 
   void FourWheelSteeringController::updateCommand(const rclcpp::Time &time, const rclcpp::Duration &period)
@@ -702,6 +731,28 @@ namespace four_wheel_steering_controller
       RCLCPP_INFO(get_node()->get_logger(), "Can't accept new commands. Controller is not running.");
     }
   }
+  
+  void FourWheelSteeringController::callback(const gazebo_msgs::msg::LinkStates &msg) 
+  {
+    for (size_t i = 0; i < msg.name.size(); ++i)
+    {
+      if (msg.name[i] == "ranger_mini_v2::base_link") 
+      {
+        const auto& pose = msg.pose[i];
+        const auto& position = pose.position;
+        const auto& orientation = pose.orientation;
+
+        position_x=position.x;
+        position_y=position.y;
+        orientation_x=orientation.x;
+        orientation_y=orientation.y;
+        orientation_z=orientation.z;
+        orientation_w=orientation.w;
+        return;
+      }
+  }
+  }
+  
 }
 
 #include "pluginlib/class_list_macros.hpp"
