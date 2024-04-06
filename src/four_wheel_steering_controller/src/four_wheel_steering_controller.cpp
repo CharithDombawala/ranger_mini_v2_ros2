@@ -428,7 +428,7 @@ namespace four_wheel_steering_controller
     
     double linear = copysign(1.0, rear_linear_speed) * sqrt(pow(linear_x_, 2) + pow(linear_y_, 2));
 
-    RCLCPP_INFO(get_node()->get_logger(), "angular speed: %.2f  linear_x: %.2f linear_y_: %.2f", angular_, linear_x_, linear_y_);
+    // RCLCPP_INFO(get_node()->get_logger(), "angular speed: %.2f  linear_x: %.2f linear_y_: %.2f", angular_, linear_x_, linear_y_);
 
     // current_time_ = time;
     // double dt = (current_time_.seconds() - last_time_.seconds());    

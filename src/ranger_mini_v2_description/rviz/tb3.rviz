@@ -33,7 +33,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -67,7 +67,7 @@ Visualization Manager:
       Color: 224; 28; 36
       Color Transformer: FlatColor
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: true
       Max Color: 255; 255; 255
       Max Intensity: 0.02500000037252903
@@ -88,7 +88,7 @@ Visualization Manager:
         Value: /scan
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 0.699999988079071
       Class: rviz_default_plugins/Map
       Color Scheme: map
