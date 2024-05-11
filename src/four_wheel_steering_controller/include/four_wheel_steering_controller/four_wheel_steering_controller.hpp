@@ -116,6 +116,7 @@ protected:
 
   rclcpp::Publisher<ControllerStateMsgOdom>::SharedPtr odom_s_publisher_;
   rclcpp::Publisher<ControllerStateMsgTf>::SharedPtr tf_odom_s_publisher_;
+  rclcpp::Publisher<ControllerStateMsgOdom>::SharedPtr odom2_s_publisher_;
 
   size_t nr_state_itfs_;
   size_t nr_cmd_itfs_;
@@ -183,6 +184,7 @@ private:
 
   std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry> > odom_pub_;
   std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::msg::TFMessage> > tf_odom_pub_;
+  std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry> > odom2_pub_;
   Odometry odometry;
 
 

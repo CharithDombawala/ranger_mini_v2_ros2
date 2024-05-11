@@ -140,7 +140,7 @@ def generate_launch_description():
         default_value=os.path.join(bringup_dir, 'worlds', 'waffle.model'),
         description='Full path to robot sdf file to spawn the robot in gazebo')
 
-    # Specify the actions
+    # # Specify the actions
     start_gazebo_server_cmd = ExecuteProcess(
         condition=IfCondition(use_simulator),
         cmd=['gzserver', '-s', 'libgazebo_ros_init.so',

@@ -67,7 +67,7 @@ def generate_launch_description():
 
     declare_slam_cmd = DeclareLaunchArgument(
         'slam',
-        default_value='False',  #False
+        default_value='True',  #False
         description='Whether run a SLAM')
     
     declare_world_cmd = DeclareLaunchArgument(
@@ -141,9 +141,9 @@ def generate_launch_description():
     #     default_value=os.path.join(bringup_dir, 'worlds', 'world_only.model'),
     #     description='Full path to world model file to load')
 
-    # world = os.path.join(ranger_pkg,'worlds', 'turtlebot3_house.world')
-    # # world=""    
-    # os.environ["GAZEBO_MODEL_PATH"] = os.path.join(ranger_pkg, 'models')
+    world = os.path.join(ranger_pkg,'worlds', 'turtlebot3_house.world')
+    # world=""    
+    os.environ["GAZEBO_MODEL_PATH"] = os.path.join(ranger_pkg, 'models')
 
     declare_robot_name_cmd = DeclareLaunchArgument(
         'robot_name',

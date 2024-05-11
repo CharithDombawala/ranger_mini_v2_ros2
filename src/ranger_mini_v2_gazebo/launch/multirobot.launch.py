@@ -1,107 +1,107 @@
-from launch import LaunchDescription
-from launch.actions import (IncludeLaunchDescription, ExecuteProcess, DeclareLaunchArgument)
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PythonExpression
-import os
-from launch.conditions import IfCondition
-from ament_index_python.packages import get_package_share_directory
-from launch.substitutions import Command
-from launch_ros.actions import Node
-import xacro
 
-ARGUMENTS = [
-    DeclareLaunchArgument("model", default_value=os.path.join(get_package_share_directory('ranger_mini_v2_gazebo'), 'xacro', "ranger_mini_gazebo_b.xacro")),
-    DeclareLaunchArgument("paused", default_value="false"),
-    DeclareLaunchArgument("use_sim_time", default_value="true"),
-    DeclareLaunchArgument("gui", default_value="true"),
-    DeclareLaunchArgument("headless", default_value="False"),
-    DeclareLaunchArgument("debug", default_value="false"),
-    DeclareLaunchArgument("joy_dev0", default_value="/dev/input/js0"),
-    DeclareLaunchArgument('use_simulator', default_value='True'),
-    DeclareLaunchArgument('world',default_value=""),
-    DeclareLaunchArgument("x_pose", default_value="0.0"),
-    DeclareLaunchArgument("y_pose", default_value="-2.40"),
-    DeclareLaunchArgument('z_pose', default_value='0.0'),
-    DeclareLaunchArgument('roll_pose', default_value='0.0'),
-    DeclareLaunchArgument('pitch_pose', default_value='0.0'),
-    DeclareLaunchArgument('yaw_pose', default_value='0.0'),
-]
+import os
+
+from ament_index_python.packages import get_package_share_directory
+
+from launch import LaunchDescription
+from launch.actions import (DeclareLaunchArgument, ExecuteProcess, GroupAction,
+                            IncludeLaunchDescription, LogInfo)
+from launch.conditions import IfCondition
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration, TextSubstitution
+from launch.actions import TimerAction
+
 
 def generate_launch_description():
-    launch_dir = os.path.join(get_package_share_directory('ranger_mini_v2_gazebo'), "launch")
-    urdf_path = os.path.join(get_package_share_directory('ranger_mini_v2_description'))
-    ranger_pkg=get_package_share_directory('ranger_mini_v2_gazebo')
+    # Get the launch directory
+    package_dir = get_package_share_directory('ranger_mini_v2_gazebo')
+    launch_dir = os.path.join(package_dir, 'launch')
 
-    xacro_file = os.path.join(urdf_path, 'urdf', 'ranger_mini_v2.urdf')
-    doc = xacro.parse(open(xacro_file))
-    xacro.process_doc(doc)  
-    params = {'robot_description': doc.toxml()}
+    # Names and poses of the robots
+    robots = [
+        {'name': 'tb3', 'x_pose': 0.0, 'y_pose': -2.5, 'z_pose': 0.01,
+                           'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0, 'launch_file_name':'turtlebot3.launch.py', 'use_namespace':'True'},
+        {'name': 'ranger', 'x_pose': -1.0, 'y_pose': -0.75, 'z_pose': 0.01,
+                           'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0, 'launch_file_name':'gazebo.launch.py', 'use_namespace':'False'},
+     
+        ]
 
-    use_simulator = LaunchConfiguration('use_simulator')
-    world = os.path.join(ranger_pkg,'worlds', 'turtlebot3.world')
-    #world=""
-    headless = LaunchConfiguration('headless')
-    
-    os.environ["GAZEBO_MODEL_PATH"] = os.path.join(ranger_pkg, 'models')
-    
-    ranger_mini_control_launch = os.path.join(get_package_share_directory('ranger_mini_v2_control'), 'launch/control.launch.py')
-    turtlebot3_launch = os.path.join(get_package_share_directory('ranger_mini_v2_gazebo'), 'launch/turtlebot3.launch.py')
+    # # Simulation settings
+    world = LaunchConfiguration('world')
+    simulator = LaunchConfiguration('simulator')
+    # rviz_config_file = LaunchConfiguration('rviz_config')
+    log_settings = LaunchConfiguration('log_settings', default='True')
 
-    
-    start_gazebo_server_cmd = ExecuteProcess(
-        condition=IfCondition(use_simulator),
-        cmd=['gzserver', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', world],
-        cwd=[launch_dir],
-        output='screen'
-    )
+    # # Declare the launch arguments
+    declare_world_cmd = DeclareLaunchArgument(
+        'world',
+        # default_value=os.path.join(package_dir, 'urdf', 'world_only.model'),
+        #default_value=os.path.join(package_dir, 'worlds', 'map2.world'),
+        # default_value=os.path.join(package_dir, 'worlds', 'willow_garage_closed.world'),
+        default_value=os.path.join(package_dir, 'worlds', 'turtlebot3_house.world'),
+        # default_value=os.path.join(package_dir, 'worlds', 'willow_garage.world'),
+        description='Full path to world file to load')
 
-    start_gazebo_client_cmd = ExecuteProcess(
-        condition=IfCondition(PythonExpression([use_simulator, ' and not ', headless])),
-        cmd=['gzclient'],
-        cwd=[launch_dir],
-        output='screen'
-    )
+    declare_simulator_cmd = DeclareLaunchArgument(
+        'simulator',
+        default_value='gazebo',
+        description='The simulator to use (gazebo or gzserver)')
 
-    Include_ranger_mini_control = IncludeLaunchDescription(PythonLaunchDescriptionSource([ranger_mini_control_launch]),)
+    declare_rviz_config_file_cmd = DeclareLaunchArgument(
+        'rviz_config',
+        default_value=os.path.join(package_dir, 'rviz', 'namespaced_view.rviz'),
+        description='Full path to the RVIZ config file to use.')
 
-    ranger_robot_state_publisher = Node(
-        package='robot_state_publisher',
-        executable='robot_state_publisher',
-        name='ranger_robot_state_publisher',
-        # output='log',
-        parameters=[params]
-    )
-    
-    start_hostmap_static_tf_publisher = Node(
-        package = "tf2_ros", 
-        executable = "static_transform_publisher",
-        name = "hostmap_tf_publisher",
-        arguments = ["0", "0", "0", "0", "0", "0", "map", "odom"]
-    )
+    # Start Gazebo with plugin providing the robot spawning service
+    start_gazebo_cmd = ExecuteProcess(
+        cmd=[simulator, '--verbose', '-s', 'libgazebo_ros_init.so',
+                                     '-s', 'libgazebo_ros_factory.so', world],
+        output='screen')
 
-    spawn_entity = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        arguments=[
-            '-topic', 'robot_description',
-            '-entity', 'ranger_mini_v2',
-            '-reference_frame', 'world',
-            '-x', LaunchConfiguration('x_pose'),
-            '-y', LaunchConfiguration('y_pose'),
-            '-z', LaunchConfiguration('z_pose'),
-        ],
-        # output='log' #screen
-    )
+    # Define commands for launching the navigation instances
+    nav_instances_cmds = []
+    for robot in robots:
+        nav_instances_cmds.append(GroupAction([
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(os.path.join(package_dir,
+                                                           'launch',
+                                                           robot['launch_file_name'])),
+                launch_arguments={'namespace': robot['name'],
+                                  'use_namespace': robot['use_namespace'],
+                                  'use_sim_time': 'True',
+                                  #'rviz_config_file': os.path.join(package_dir, 'rviz', 'namespaced_view.rviz'),
+                                  'use_simulator': 'False',
+                                  'x_pose': TextSubstitution(text=str(robot['x_pose'])),
+                                  'y_pose': TextSubstitution(text=str(robot['y_pose'])),
+                                  'z_pose': TextSubstitution(text=str(robot['z_pose'])),
+                                  'roll': TextSubstitution(text=str(robot['roll'])),
+                                  'pitch': TextSubstitution(text=str(robot['pitch'])),
+                                  'yaw': TextSubstitution(text=str(robot['yaw'])),
+                                  'robot_name':TextSubstitution(text=robot['name']), }.items()),
 
-    Include_turtlebot3_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource([turtlebot3_launch]),)
+            LogInfo(
+                condition=IfCondition(log_settings),
+                msg=['Launching ', robot['name']]),
+            # LogInfo(
+            #     condition=IfCondition(log_settings),
+            #     msg=[robot['name'], ' rviz config file: ', rviz_config_file]),
+        ], scoped=False))
 
+    # Create the launch description and populate
+    ld = LaunchDescription()
 
-    ld = LaunchDescription(ARGUMENTS)
-    ld.add_action(start_gazebo_server_cmd)
-    ld.add_action(start_gazebo_client_cmd)
-    ld.add_action(ranger_robot_state_publisher)
-    ld.add_action(spawn_entity)
-    ld.add_action(Include_ranger_mini_control)
-    ld.add_action(Include_turtlebot3_launch)
-    ld.add_action(start_hostmap_static_tf_publisher)
+    # Declare the launch options
+    ld.add_action(declare_simulator_cmd)
+    ld.add_action(declare_world_cmd)
+    ld.add_action(declare_rviz_config_file_cmd)
+
+    # Add the actions to start gazebo, robots and simulations
+    ld.add_action(start_gazebo_cmd)
+
+    start_delay = 0.0
+    for nav_instance in nav_instances_cmds:
+        # Added delay between nav stack launching due to life_cycle manager transition freezing issue
+        ld.add_action(TimerAction(period=start_delay, actions=[nav_instance]))
+        start_delay += 5.0
+
     return ld

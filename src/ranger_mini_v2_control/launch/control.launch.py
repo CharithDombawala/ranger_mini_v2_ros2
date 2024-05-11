@@ -108,7 +108,7 @@ def generate_launch_description():
     
     
     nodes = [
-        control_node,
+        # control_node,
         joint_state_broadcaster_spawner,
         delay_rviz_after_joint_state_broadcaster_spawner,
         Include_joy_node,

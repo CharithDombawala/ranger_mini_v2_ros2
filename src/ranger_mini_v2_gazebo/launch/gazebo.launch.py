@@ -19,9 +19,9 @@ ARGUMENTS = [
     DeclareLaunchArgument("joy_dev0", default_value="/dev/input/js0"),
     DeclareLaunchArgument('use_simulator', default_value='True'),
     DeclareLaunchArgument('world',default_value=""),
-    DeclareLaunchArgument("x_pose", default_value="0.0"),
-    DeclareLaunchArgument("y_pose", default_value="-1.40"),
-    DeclareLaunchArgument('z_pose', default_value='0.0'),
+    DeclareLaunchArgument("x_pose", default_value="-3.50"),
+    DeclareLaunchArgument("y_pose", default_value="0.50"),
+    DeclareLaunchArgument('z_pose', default_value='0.01'),
     DeclareLaunchArgument('roll_pose', default_value='0.0'),
     DeclareLaunchArgument('pitch_pose', default_value='0.0'),
     DeclareLaunchArgument('yaw_pose', default_value='0.0'),
@@ -30,7 +30,6 @@ ARGUMENTS = [
 def generate_launch_description():
     launch_dir = os.path.join(get_package_share_directory('ranger_mini_v2_gazebo'), "launch")
     urdf_path = os.path.join(get_package_share_directory('ranger_mini_v2_description'))
-    pkg_dir = get_package_share_directory('warehouse_robot_spawner_pkg')
     ranger_pkg=get_package_share_directory('ranger_mini_v2_gazebo')
 
     xacro_file = os.path.join(urdf_path, 'urdf', 'ranger_mini_v2.urdf')
@@ -39,8 +38,11 @@ def generate_launch_description():
     params = {'robot_description': doc.toxml()}
 
     use_simulator = LaunchConfiguration('use_simulator')
-    world = os.path.join(ranger_pkg,'worlds', 'turtlebot3_house.world')
-    #world=""
+    #world = os.path.join(ranger_pkg,'worlds', 'turtlebot3_house.world') 
+    # world = os.path.join(ranger_pkg,'worlds', 'with_narrow_spaces.world') 
+    # world = os.path.join(ranger_pkg,'worlds', 'withnarrowspace.world')
+    world = os.path.join(ranger_pkg,'worlds', 'narrow_space.world') 
+    #world='with_narrow_spaces.world'
     headless = LaunchConfiguration('headless')
     
     os.environ["GAZEBO_MODEL_PATH"] = os.path.join(ranger_pkg, 'models')

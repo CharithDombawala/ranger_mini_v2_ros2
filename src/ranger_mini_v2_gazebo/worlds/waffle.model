@@ -37,10 +37,55 @@
               <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
+           <material>
+        <!-- Dark red color in RGBA format -->
+        <ambient>0.5 0 0 1</ambient> <!-- Adjust the values as needed -->
+        <diffuse>0.5 0 0 1</diffuse> <!-- Adjust the values as needed -->
+        <specular>0.5 0.5 0.5 1</specular> <!-- Adjust the values as needed -->
+    </material>
         </visual>
         
       </link>
  
+      <link name="box_link">
+      
+        <!--inertial>
+          <pose>-0 0 0 0 0 0</pose>
+          <inertia>
+            <ixx>0.001</ixx>
+            <ixy>0.000</ixy>
+            <ixz>0.000</ixz>
+            <iyy>0.001</iyy>
+            <iyz>0.000</iyz>
+            <izz>0.001</izz>
+          </inertia>
+          <mass>0.1</mass>
+        </inertial--> 
+         
+         <collision name="box_collision">
+	      <pose> -0.064 0 0.07 0 0 0</pose>
+	      <geometry>
+	      <box>
+	       <size>0.2 0.2 0.005</size>
+	      </box>
+	      </geometry>
+	 </collision>
+	   
+	  <visual name="box_visual">
+          <pose> -0.064 0 0.07 0 0 0</pose>
+	    <geometry>
+	      <box> 
+	      <size> 0.68 0.50 0.005"</size>
+	      </box> 
+	    </geometry>
+	 <material>
+        <!-- Black color in RGBA format -->
+        <ambient>0 0 0 1</ambient>
+        <diffuse>0 0 0 1</diffuse>
+        <specular>0.5 0.5 0.5 1</specular> <!-- You can adjust specular if needed -->
+    </material>
+	  </visual>
+     </link>
 
       <link name="imu_link">
         <sensor name="tb3_imu" type="imu">
@@ -130,6 +175,12 @@
               <scale>0.001 0.001 0.001</scale>
             </mesh>
           </geometry>
+          <material>
+        <!-- Black color in RGBA format -->
+        <ambient>0 0 0 1</ambient>
+        <diffuse>0 0 0 1</diffuse>
+        <specular>0.5 0.5 0.5 1</specular> <!-- You can adjust specular if needed -->
+    </material>
         </visual>
 
         <sensor name="hls_lfcd_lds" type="ray">
@@ -408,6 +459,12 @@
         <parent>base_footprint</parent>
         <child>base_link</child>
         <pose>0.0 0.0 0.010 0 0 0</pose>
+      </joint>
+      
+       <joint name="base_link_joint" type="fixed">
+        <parent>base_link</parent>
+        <child>box_link</child>
+        <pose>0.0 0.0 0.0 0 0 0</pose>
       </joint>
 
       <joint name="wheel_left_joint" type="revolute">
