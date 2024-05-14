@@ -1,6 +1,6 @@
 # OVERVIEW
 <p align="justify">
-This is Ros2 simulation of a swerve drive robot named ranger_mini_v2.This workspace is a partial migration from ros1 simulation by weston robot. Spectially the four_wheel_steering_controller package, ranger_mini_v2_naviagtion package and ranger_mini_v2_description packages have been modified significantly.Although urdf_geometry_parser package have not being using here.
+This is a ROS2 simulation of a swerve drive robot named ranger_mini_v2. This workspace is a partial migration from the ROS1 simulation by Weston Robot. Specifically, the four_wheel_steering_controller package, ranger_mini_v2_navigation package, and ranger_mini_v2_description package have been significantly modified. Although the urdf_geometry_parser package is not being used here.
 </p>
 
 # Prerequisites
@@ -21,10 +21,10 @@ All packages in this repository have been developed, executed and tested in an U
         home
           └── ranger_mini_v2
           ├──    └── src
-          .
-          .
+          ├── 
+          ├── 
           └── 
-      using terminal,
+      In terminal,
 
        cd ranger_mini_v2
 
@@ -33,7 +33,7 @@ All packages in this repository have been developed, executed and tested in an U
        colcon build --symlink-install
        
 
-3. Open three terminals, Run following commands one by one in order to start the simulation.
+3. Open three terminals, In each terminal run following commands one by one in order to start the simulation.
 
    - To spawn the robot and the controllers into gazebo environment.
 
@@ -49,7 +49,7 @@ All packages in this repository have been developed, executed and tested in an U
          ros2 launch ranger_mini_v2_navigation nav2.launch.py use_sim_time:=true
 
 
-After that you can able to see you gazebo and rviz2 gui like this.
+After that you can able to see gazebo and rviz2 windows like this.
 
 
 ![](image_1.png)
@@ -101,39 +101,39 @@ After that you can able to see you gazebo and rviz2 gui like this.
                         ├── lidar.urdf   
                         └── ros2_control.urdf
 
-- CMakeLists.txt - This file contains the CMake configuration, which is used to build and compile the package.
+- **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
 
-- LICENSE - This file contains the licensing information for the package.
+- **LICENSE** - This file contains the licensing information for the package.
 
-- package.xml - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.
+- **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.
 
-* meshes/components - This folder contains the 3D models and textures used to visually represent the robot.
+* **meshes/components** - This folder contains the 3D models and textures used to visually represent the robot.
 
-  - base_link.STL - A 3D model file in STL format representing the base link of the robot.
+  - **base_link.STL** - A 3D model file in STL format representing the base link of the robot.
 
-  - base_texture.png - A texture image used to apply visual color to the base link of the robot.
+  - **base_texture.png** - A texture image used to apply visual color to the base link of the robot.
 
-  - wheel_assembly_a.dae - A 3D model file in DAE format for the first type of wheel assembly.
+  - **wheel_assembly_a.dae** - A 3D model file in DAE format for the first type of wheel assembly.
 
-  - wheel_assembly_b.dae - A 3D model file in DAE format for the second type of wheel assembly.
+  - **wheel_assembly_b.dae** - A 3D model file in DAE format for the second type of wheel assembly.
 
-  - wheel_texture.png - A texture image used to apply visual color to the wheels of the robot.
-
-
-* rviz - This folder contains configuration files for visualizing the robot in RViz, a 3D visualization tool for ROS2.
-
-  - swerve.rviz - A configuration file for RViz specifying how to display the visualization of maps, robot model, Laserscan, Path etc
+  - **wheel_texture.png** - A texture image used to apply visual color to the wheels of the robot.
 
 
-* urdf - This folder contains the Unified Robot Description Format (URDF) files that define the physical and visual properties of the robot.
+* **rviz** - This folder contains configuration files for visualizing the robot in RViz, a 3D visualization tool for ROS2.
 
-  - ranger_mini_v2.urdf - The main URDF file that brings together all components (defined in components.urdf) and configurations to define the complete Ranger Mini V2 robot model.
+  - **swerve.rviz**  - A configuration file for RViz specifying how to display the visualization of maps, robot model, Laserscan, Path etc
 
-  - include/ranger_mini_v2 - This subfolder contains additional URDF files that define specific parts or functionalities of the robot.
 
-      - components.urdf - A URDF file defining individual components of the robot.
+* **urdf** - This folder contains the Unified Robot Description Format (URDF) files that define the physical and visual properties of the robot.
 
-      - lidar.urdf - A URDF file specifically describing the LIDAR sensor's physical and visual properties. 
+  - **ranger_mini_v2.urdf** - The main URDF file that brings together all components (defined in components.urdf) and configurations to define the complete Ranger Mini V2 robot model.
+
+  - **include/ranger_mini_v2** - This subfolder contains additional URDF files that define specific parts or functionalities of the robot.
+
+      - **components.urdf** - A URDF file defining individual components of the robot.
+
+      - **lidar.urdf** - A URDF file specifically describing the LIDAR sensor's physical and visual properties. 
         
         <p align="justify">
         If you want to change the possition  of lidar, you can edit xyz values of the origin of laser_joint accodingly.
@@ -180,7 +180,7 @@ After that you can able to see you gazebo and rviz2 gui like this.
         ```
 
 
-      - ros2_control.urdf - A URDF file defining the ROS 2 control interfaces and plugins for the robot.
+      - **ros2_control.urdf** - A URDF file defining the ROS 2 control interfaces and plugins for the robot.
 
 ### ranger_mini_v2_gazebo package
 
@@ -204,15 +204,15 @@ After that you can able to see you gazebo and rviz2 gui like this.
 
 
 
-- CMakeLists.txt - This file contains the CMake configuration, which is used to build and compile the package.
+- **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
 
-- LICENSE - This file contains the licensing information for the package.
+- **LICENSE** - This file contains the licensing information for the package.
 
-- package.xml - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.
+- **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.
 
-* launch - This folder contains launch files for starting the Gazebo simulation.
+* **launch** - This folder contains launch files for starting the Gazebo simulation.
 
-  - gazebo.launch.py - A Python-based launch file to start the Gazebo simulator with the specified world and robot configurations.
+  - **gazebo.launch.py** - A Python-based launch file to start the Gazebo simulator with the specified world and robot configurations.
   
     <p align="justify">
     If you want to spawn the robot into different world, you can add that particular world into world directory and then change this code segemnet according to its name (need to compile again). you can use existing worlds in the world directory by uncommenting relevent line.
@@ -225,25 +225,25 @@ After that you can able to see you gazebo and rviz2 gui like this.
     # world = os.path.join(ranger_pkg,'worlds', 'empty.world')
       ```
 
-* map - This folder contains the map data used in the simulation.( if you are using localization )
+* **map** - This folder contains the map data used in the simulation.( if you are using localization )
 
-   - map.pgm - A Portable Gray Map (PGM) file representing the grayscale image of the map.
+   - **map.pgm** - A Portable Gray Map (PGM) file representing the grayscale image of the map.
 
-   - map.yaml - A YAML file containing the metadata for the map, including resolution, origin, and file name.
+   - **map.yaml** - A YAML file containing the metadata for the map, including resolution, origin, and file name.
 
 
 
-* models - This folder contains the 3D models used in the Gazebo simulation environment.
+* **models** - This folder contains the 3D models used in the Gazebo simulation environment.
 
-   - turtlebot3_house - A directory containing the model files for the TurtleBot3 house environment used in the simulation.
+   - **turtlebot3_house** - A directory containing the model files for the TurtleBot3 house environment used in the simulation.
 
-* worlds - This folder contains different world files for the Gazebo simulation.
+* **worlds** - This folder contains different world files for the Gazebo simulation.
 
-  - turtlebot3_house.world - A world file representing a predefined environment resembling a house for the TurtleBot3.
+  - **turtlebot3_house.world** - A world file representing a predefined environment resembling a house for the TurtleBot3.
 
-  - narrow_space.world - A world file representing an environment with narrow spaces for testing navigation and obstacle avoidance.
+  - **narrow_space.world** - A world file representing an environment with narrow spaces for testing navigation and obstacle avoidance.
 
-  - empty.world - A world file representing an empty environment, useful for basic testing and development.
+  - **empty.world** - A world file representing an empty environment, useful for basic testing and development.
     
     <p align="justify">
       If you want to add a different world file to this directory, make sure to include the following plugin in your world file, as we are obtaining odometry data related to the base_link of our robot using that plugin.
@@ -273,25 +273,25 @@ After that you can able to see you gazebo and rviz2 gui like this.
                 ├── control.launch.py               
                 └── joystick.launch.py
 
-- CMakeLists.txt - This file contains the CMake configuration, which is used to build and compile the package.
+- **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
 
-- LICENSE - This file contains the licensing information for the package.
+- **LICENSE** - This file contains the licensing information for the package.
 
-- package.xml - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.               
-
-
-* config - This folder contains configuration files for the controllers and joystick(if applicable) used with the robot.
-
-  - controller.yaml - A YAML file containing configuration settings for the robot's controllers, such as PID gains, Velocity and acceleration limits, and other parameters.
-
-  - joystick.yaml - A YAML file containing configuration settings for the joystick, including button mappings, axis configurations, and other related parameters.
+- **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.               
 
 
-* launch - This folder contains launch files for starting various control-related nodes.
+* **config** - This folder contains configuration files for the controllers and joystick(if applicable) used with the robot.
 
-  - control.launch.py - A Python-based launch file to load joint_state_broadcaster and four_wheel_steering_controller, initializing the controller configurations defined in controller.yaml.
+  - **controller.yaml** - A YAML file containing configuration settings for the robot's controllers, such as PID gains, Velocity and acceleration limits, and other parameters.
 
-  - joystick.launch.py - A Python-based launch file to start the joystick control node, initializing the joystick configurations defined in joystick.yaml
+  - **joystick.yaml** - A YAML file containing configuration settings for the joystick, including button mappings, axis configurations, and other related parameters.
+
+
+* **launch** - This folder contains launch files for starting various control-related nodes.
+
+  - **control.launch.py** - A Python-based launch file to load joint_state_broadcaster and four_wheel_steering_controller, initializing the controller configurations defined in controller.yaml.
+
+  - **joystick.launch.py** - A Python-based launch file to start the joystick control node, initializing the joystick configurations defined in joystick.yaml
 
 
 ### ranger_mini_v2_navigation package
@@ -309,15 +309,15 @@ After that you can able to see you gazebo and rviz2 gui like this.
                 ├── nav2.launch.py             
                 └── slam.launch.py
 
-- CMakeLists.txt - This file contains the CMake configuration, which is used to build and compile the package.
+- **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
 
-- LICENSE - This file contains the licensing information for the package.
+- **LICENSE** - This file contains the licensing information for the package.
 
-- package.xml - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc. 
+- **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc. 
 
-* config - This folder contains configuration files for various navigation functionalities.
+* **config** - This folder contains configuration files for various navigation functionalities.
 
-  - localization.yaml - A YAML file containing configuration settings for the localization system, such as parameters for the localization algorithm and sensor configurations.
+  - **localization.yaml** - A YAML file containing configuration settings for the localization system, such as parameters for the localization algorithm and sensor configurations.
 
       <p align="justify">
       If your are using different world, then you have to include its map in the map directory. Also you have to add yaml file path of that map into map_server.
@@ -334,7 +334,7 @@ After that you can able to see you gazebo and rviz2 gui like this.
       ```  
 
 
-  - nav2.yaml - A YAML file containing configuration settings for the ROS 2 Navigation stack (Nav2), including path planning, costmap configurations,controller server configurations and other navigation-related parameters.
+  - **nav2.yaml** - A YAML file containing configuration settings for the ROS 2 Navigation stack (Nav2), including path planning, costmap configurations,controller server configurations and other navigation-related parameters.
 
     <p align="justify">
     In order to tune the robot, mainly you have to change the controller server critic weights accordingly. Please Follow MPPI controller documentation for Humble.
@@ -414,16 +414,16 @@ After that you can able to see you gazebo and rviz2 gui like this.
                   tolerance: 1.0e-10
       ```
 
-  - slam.yaml - A YAML file containing configuration settings for SLAM (Simultaneous Localization and Mapping), specifying parameters for mapping and localization while the robot explores an unknown environment.
+  - **slam.yaml** - A YAML file containing configuration settings for SLAM (Simultaneous Localization and Mapping), specifying parameters for mapping and localization while the robot explores an unknown environment.
 
 
-*  launch - This folder contains launch files for starting various navigation-related nodes.
+*  **launch** - This folder contains launch files for starting various navigation-related nodes.
 
-   - localization.launch.py - A Python-based launch file to start the localization nodes, initializing the configurations defined in localization.yaml.
+   - **localization.launch.py** - A Python-based launch file to start the localization nodes, initializing the configurations defined in localization.yaml.
 
-   - nav2.launch.py
+   - **nav2.launch.py**
             A Python-based launch file to start the Nav2 stack, initializing the configurations defined in nav2.yaml.
 
-   - slam.launch.py
+   - **slam.launch.py**
             A Python-based launch file to start the SLAM nodes, initializing the configurations defined in slam.yaml.
 
