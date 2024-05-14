@@ -3,6 +3,11 @@
 This is a ROS2 simulation of a swerve drive robot named ranger_mini_v2. This workspace is a partial migration from the ROS1 simulation by Weston Robot. Specifically, the four_wheel_steering_controller package, ranger_mini_v2_navigation package, and ranger_mini_v2_description package have been significantly modified. Although the urdf_geometry_parser package is not being used here.
 </p>
 
+# Architecture
+
+![](image_0.png)
+
+
 # Prerequisites
 
 - Ubuntu 22.04 OS
@@ -427,3 +432,26 @@ After that you can able to see gazebo and rviz2 windows like this.
    - **slam.launch.py**
             A Python-based launch file to start the SLAM nodes, initializing the configurations defined in slam.yaml.
 
+
+### four_wheel_steering_controller package
+
+      four_wheel_steering_controller
+            ├── CMakeLists.txt
+            ├── four_wheel_steering_controller.xml
+            ├── LICENSE 
+            ├── package.xml
+            ├── include/four_wheel_steering_controller
+            │   ├── four_wheel_steering_controller.hpp 
+            |   ├── odometry.h 
+            |   ├── speed_limiter.hpp
+            |   └── visibility_contorl.hpp
+            └── src
+                ├── four_wheel_steering_controller.cpp 
+                ├── odometry.cpp             
+                └── speed_limiter.cpp
+
+- **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
+
+- **LICENSE** - This file contains the licensing information for the package.
+
+- **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc. 
