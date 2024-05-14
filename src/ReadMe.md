@@ -56,7 +56,10 @@ After that you can able to see you gazebo and rviz2 gui like this.
 
 ![](image_2.png)
 
-[![](video_1.mp4)](video_1.mp4)
+<div align="center">
+    <iframe src="https://drive.google.com/file/d/1kGQDAgb77I5bMFVlKN86udLNigSDjU7L/preview" width="640" height="480">
+    </iframe>
+</div>
 
 
 
