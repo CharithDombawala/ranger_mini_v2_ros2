@@ -319,11 +319,11 @@ After that you can able to see you gazebo and rviz2 gui like this.
 
       ```yaml
       map_server:
-      ros__parameters:
-      use_sim_time: True
-      # Overridden in launch by the "map" launch configuration or provided default value.
-      # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
-      yaml_filename: "/home/charith-2204/ranger_mini_v2/src/ranger_mini_v2_gazebo/map/map.yaml"
+         ros__parameters:
+            use_sim_time: True
+            # Overridden in launch by the "map" launch configuration or provided default value.
+            # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
+            yaml_filename: "/home/charith-2204/ranger_mini_v2/src/ranger_mini_v2_gazebo/map/map.yaml"
       ```  
 
 
