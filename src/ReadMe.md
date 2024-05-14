@@ -51,9 +51,10 @@ All packages in this repository have been developed, executed and tested in an U
 
 After that you can able to see you gazebo and rviz2 gui like this.
 
-<div style="text-align: right;">
-    <img src="image 1.png" alt="Simulation Setup" width="600" style="margin: 10px;">
-    <img src="image 2.png" alt="Rviz2 Navigation" width="600" style="margin: 10px;">
+
+<div style="display: flex; justify-content: center;">
+    <img src="image%201.png" alt="Image 1" width="600" style="margin: 10px;">
+    <img src="image%202.png" alt="Image 2" width="600" style="margin: 10px;">
 </div>
 
 # List of Packages
@@ -251,7 +252,7 @@ After that you can able to see you gazebo and rviz2 gui like this.
     </plugin>
     ```
 
-![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.]( image%203.png)
+![]( image%203.png)
 
 ### ranger_mini_v2_control package
 
