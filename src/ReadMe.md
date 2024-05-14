@@ -250,9 +250,9 @@ After that you can able to see you gazebo and rviz2 gui like this.
       <update_rate>50.0</update_rate>
     </plugin>
     ```
-<img src="image 3.png" alt="Simulation Setup" width="600" style="margin: 10px;">
 
-![](image 3.png)
+![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.]( image%203.png)
+
 ### ranger_mini_v2_control package
 
       ranger_mini_v2_control
