@@ -3,11 +3,6 @@
 This is a ROS2 simulation of a swerve drive robot named ranger_mini_v2. This workspace is a partial migration from the ROS1 simulation by Weston Robot. Specifically, the four_wheel_steering_controller package, ranger_mini_v2_navigation package, and ranger_mini_v2_description package have been significantly modified. Although the urdf_geometry_parser package is not being used here.
 </p>
 
-# Architecture
-
-![](image_0.png)
-
-
 # Prerequisites
 
 - Ubuntu 22.04 OS
@@ -66,7 +61,9 @@ After that you can able to see gazebo and rviz2 windows like this.
 
 [Simulation video-2](https://drive.google.com/file/d/1DRm593709AjEyMUHWVXXF5L8cFRlZKf_/view?usp=sharing)
 
+# Architecture
 
+![](image_0.png)
 
 # List of Packages
 
