@@ -252,7 +252,7 @@ After that you can able to see you gazebo and rviz2 gui like this.
     ```
 <img src="image 3.png" alt="Simulation Setup" width="600" style="margin: 10px;">
 
-
+![](image 3.png)
 ### ranger_mini_v2_control package
 
       ranger_mini_v2_control
