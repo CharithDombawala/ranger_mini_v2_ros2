@@ -51,7 +51,7 @@ All packages in this repository have been developed, executed and tested in an U
 
 After that you can able to see you gazebo and rviz2 gui like this.
 
-<div style="text-align: center;">
+<div style="text-align: right;">
     <img src="image 1.png" alt="Simulation Setup" width="600" style="margin: 10px;">
     <img src="image 2.png" alt="Rviz2 Navigation" width="600" style="margin: 10px;">
 </div>
