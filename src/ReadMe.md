@@ -52,10 +52,9 @@ All packages in this repository have been developed, executed and tested in an U
 After that you can able to see you gazebo and rviz2 gui like this.
 
 
-<div style="display: flex; justify-content: center;">
-    <img src="image%201.png" alt="Image 1" width="600" style="margin: 10px;">
-    <img src="image%202.png" alt="Image 2" width="600" style="margin: 10px;">
-</div>
+![]( image%201.png)
+
+![]( image%202.png)
 
 # List of Packages
 
