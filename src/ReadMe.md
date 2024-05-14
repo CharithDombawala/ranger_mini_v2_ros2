@@ -56,7 +56,12 @@ After that you can able to see you gazebo and rviz2 gui like this.
 
 ![](image_2.png)
 
-![](https://drive.google.com/file/d/1kGQDAgb77I5bMFVlKN86udLNigSDjU7L/view?usp=sharing)
+<div align="center">
+    <video width="600" controls>
+        <source src="https://drive.google.com/file/d/1kGQDAgb77I5bMFVlKN86udLNigSDjU7L/preview" type="video/mp4">
+    </video>
+</div>
+
 
 # List of Packages
 
