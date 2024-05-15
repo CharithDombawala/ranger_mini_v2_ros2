@@ -38,16 +38,16 @@ def generate_launch_description():
     params = {'robot_description': doc.toxml()}
 
     use_simulator = LaunchConfiguration('use_simulator')
-    headless = LaunchConfiguration('headless')
-
+    #world = os.path.join(ranger_pkg,'worlds', 'turtlebot3_house.world') 
+    # world = os.path.join(ranger_pkg,'worlds', 'with_narrow_spaces.world') 
+    # world = os.path.join(ranger_pkg,'worlds', 'withnarrowspace.world')
     world = os.path.join(ranger_pkg,'worlds', 'narrow_space.world') 
-    # world = os.path.join(ranger_pkg,'worlds', 'turtlebot3_house.world') 
-    # world = os.path.join(ranger_pkg,'worlds', 'empty.world') 
-
+    #world='with_narrow_spaces.world'
+    headless = LaunchConfiguration('headless')
+    
     os.environ["GAZEBO_MODEL_PATH"] = os.path.join(ranger_pkg, 'models')
     
     ranger_mini_control_launch = os.path.join(get_package_share_directory('ranger_mini_v2_control'), 'launch/control.launch.py')
-    
     
     start_gazebo_server_cmd = ExecuteProcess(
         condition=IfCondition(use_simulator),
@@ -68,7 +68,8 @@ def generate_launch_description():
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[params],
+        # output='log',
+        parameters=[params]
     )
     
     start_hostmap_static_tf_publisher = Node(
@@ -88,7 +89,8 @@ def generate_launch_description():
             '-x', LaunchConfiguration('x_pose'),
             '-y', LaunchConfiguration('y_pose'),
             '-z', LaunchConfiguration('z_pose'),
-        ]
+        ],
+        # output='log' #screen
     )
 
     ld = LaunchDescription(ARGUMENTS)

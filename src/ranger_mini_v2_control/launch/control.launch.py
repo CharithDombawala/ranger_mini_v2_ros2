@@ -55,17 +55,22 @@ def generate_launch_description():
     )
     rviz_config_file = PathJoinSubstitution(
          [FindPackageShare("ranger_mini_v2_description"), "rviz", "swerve.rviz"]
-    )
-    
+     )
 
+    control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[robot_controllers],
+        output="log", #both
+    )
     rviz_node = Node(
         package="rviz2",
          executable="rviz2",
          name="rviz",
          output="screen",
-         argumentjoint_state_broadcasters=["-d", rviz_config_file],
+         arguments=["-d", rviz_config_file],
          condition=IfCondition(gui),
-    )
+     )
 
     joint_state_broadcaster_spawner = Node(
         package="controller_manager",

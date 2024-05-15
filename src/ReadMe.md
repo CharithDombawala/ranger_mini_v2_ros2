@@ -21,8 +21,8 @@ All packages in this repository have been developed, executed and tested in an U
         home
           └── ranger_mini_v2
           ├──    └── src
-          ├── 
-          ├── 
+          .
+          .
           └── 
       In terminal,
 
@@ -452,3 +452,39 @@ After that you can able to see gazebo and rviz2 windows like this.
 - **LICENSE** - This file contains the licensing information for the package.
 
 - **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc. 
+
+* **include/four_wheel_steering_controller** - This folder contains the header files for the four-wheel steering controller.
+
+  -  **four_wheel_steering_controller.hpp** - Header file for the main four-wheel steering controller class, defining its interface and functions.
+  
+     ``` c++
+
+      const double wheel_base_ = 0.46; 
+      const double track_ = 0.412;                  
+      const double wheel_radius_ = 0.09;
+      const double wheel_steering_y_offset_ = 0.0;
+
+      std::vector<std::string> rear_wheels_state_names_={"front_right_wheel_joint","front_left_wheel_joint"};
+      std::vector<std::string> front_wheels_state_names_={"rear_right_wheel_joint","rear_left_wheel_joint"};
+      std::vector<std::string> rear_steering_state_names_={"front_right_wheel_steering_joint","front_left_wheel_steering_joint"};
+      std::vector<std::string> front_steering_state_names_={"rear_right_wheel_steering_joint","rear_left_wheel_steering_joint"};
+
+     ```
+
+
+
+
+  -  **odometry.h** - Header file for the odometry class, which handles the calculation and management of the robot's odometry information.
+
+  -  **speed_limiter.hpp** - Header file for the speed limiter class, which manages speed limits for the robot to ensure safe operation.
+
+  -  **visibility_control.hpp** - Header file that defines macros for controlling symbol visibility, ensuring proper linkage and symbol exportation across different platforms and compilers.
+
+
+* **src** - This folder contains the source files for the four-wheel steering controller.
+
+  -  **four_wheel_steering_controller.cpp** - Source file for the main four-wheel steering controller class, implementing its functionality.
+
+  -  **odometry.cpp** - Source file for the odometry class, implementing the methods for calculating and updating the robot's odometry information.
+
+  -  **speed_limiter.cpp** - Source file for the speed limiter class, implementing the logic to enforce speed limits.

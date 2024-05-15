@@ -65,6 +65,13 @@
       <robot_param_node>robot_state_publisher</robot_param_node>
       <parameters>$(find ranger_mini_v2_control)/config/controller.yaml</parameters>
     </plugin> 
+     
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+      <ros>
+        <namespace>/gazebo</namespace>
+      </ros>
+      <update_rate>1.0</update_rate>
+    </plugin>
 </gazebo>
 
 
