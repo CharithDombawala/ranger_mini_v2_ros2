@@ -8,7 +8,7 @@ This is a ROS2 simulation of a swerve drive robot named ranger_mini_v2. This wor
 - Ubuntu 22.04 OS
 - ROS2.0 Humble environment
 
-# Follow below steps to set-up your workspace
+# Follow below steps to set-up your workspace and run the simulation
 
 <p align="justify">
 All packages in this repository have been developed, executed and tested in an Ubuntu 22.04 machine with ROS2.0 Humble. Please set-up a ROS2.0 Humble environment in Ubuntu 22.04 and then follow the below steps to set-up your workspace.
