@@ -436,7 +436,7 @@ After that you can able to see gazebo and rviz2 windows like this.
             A Python-based launch file to start the SLAM nodes, initializing the configurations defined in slam.yaml.
 
 
-### four_wheel_steering_controller package (Updating)
+### four_wheel_steering_controller package
 
       four_wheel_steering_controller
             ├── CMakeLists.txt
