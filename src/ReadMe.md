@@ -14,7 +14,13 @@ This is a ROS2 simulation of a swerve drive robot named ranger_mini_v2. This wor
 All packages in this repository have been developed, executed and tested in an Ubuntu 22.04 machine with ROS2.0 Humble. Please set-up a ROS2.0 Humble environment in Ubuntu 22.04 and then follow the below steps to set-up your workspace.
 </p>
 
-1. Go inside your workspace (where your downloaded src file is located).
+1. Download the src file into your pc.
+
+2. Go to this link,download the ranger_base.dae file and add it to src/ranger_mini_v2_description/meshes/components path
+
+[ranger_base.dae](https://drive.google.com/file/d/1_UuPcv1ym_S12IVnqwNedrEESKhfejYF/view?usp=sharing)
+
+3. Go inside your workspace (where your downloaded src file is located).
 
    Example: 
 
@@ -28,12 +34,12 @@ All packages in this repository have been developed, executed and tested in an U
 
        cd ranger_mini_v2
 
-2. Build packages - run this command in your terminal
+4. Build packages - run this command in your terminal
         
        colcon build --symlink-install
        
 
-3. Open three terminals, In each terminal run following commands one by one in order to start the simulation.
+5. Open three terminals, In each terminal run following commands one by one in order to start the simulation.
 
    - To spawn the robot and the controllers into gazebo environment.
 
