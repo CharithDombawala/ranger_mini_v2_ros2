@@ -90,7 +90,6 @@ After that you can able to see gazebo and rviz2 windows like this.
 
       ranger_mini_v2_description
             ├── CMakeLists.txt
-            ├── LICENSE 
             ├── package.xml
             ├── meshes
             │   └── components
@@ -110,8 +109,6 @@ After that you can able to see gazebo and rviz2 windows like this.
                         └── ros2_control.urdf
 
 - **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
-
-- **LICENSE** - This file contains the licensing information for the package.
 
 - **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.
 
@@ -194,7 +191,6 @@ After that you can able to see gazebo and rviz2 windows like this.
 
       ranger_mini_v2_gazebo
             ├── CMakeLists.txt
-            ├── LICENSE 
             ├── package.xml
             ├── launch
             │   └── gazebo.launch.py     
@@ -213,8 +209,6 @@ After that you can able to see gazebo and rviz2 windows like this.
 
 
 - **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
-
-- **LICENSE** - This file contains the licensing information for the package.
 
 - **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.
 
@@ -272,7 +266,6 @@ After that you can able to see gazebo and rviz2 windows like this.
 
       ranger_mini_v2_control
             ├── CMakeLists.txt
-            ├── LICENSE 
             ├── package.xml
             ├── config
             │   ├── controller.yaml 
@@ -282,8 +275,6 @@ After that you can able to see gazebo and rviz2 windows like this.
                 └── joystick.launch.py
 
 - **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
-
-- **LICENSE** - This file contains the licensing information for the package.
 
 - **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.               
 
@@ -306,7 +297,6 @@ After that you can able to see gazebo and rviz2 windows like this.
 
       ranger_mini_v2_navigation
             ├── CMakeLists.txt
-            ├── LICENSE 
             ├── package.xml
             ├── config
             │   ├── localization.yaml 
@@ -318,8 +308,6 @@ After that you can able to see gazebo and rviz2 windows like this.
                 └── slam.launch.py
 
 - **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
-
-- **LICENSE** - This file contains the licensing information for the package.
 
 - **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc. 
 
@@ -353,12 +341,12 @@ After that you can able to see gazebo and rviz2 windows like this.
             enabled: true
             cost_power: 1
             cost_weight: 5.0
-            threshold_to_consider: 1.5 #1.4
+            threshold_to_consider: 1.5 
             GoalAngleCritic:
             enabled: true
             cost_power: 1
-            cost_weight: 3.0 #3
-            threshold_to_consider: 0.5 #3
+            cost_weight: 3.0 
+            threshold_to_consider: 0.5
             ObstaclesCritic:
             enabled: true
             cost_power: 1
@@ -441,7 +429,6 @@ After that you can able to see gazebo and rviz2 windows like this.
       four_wheel_steering_controller
             ├── CMakeLists.txt
             ├── four_wheel_steering_controller.xml
-            ├── LICENSE 
             ├── package.xml
             ├── include/four_wheel_steering_controller
             │   ├── four_wheel_steering_controller.hpp 
@@ -455,13 +442,13 @@ After that you can able to see gazebo and rviz2 windows like this.
 
 - **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
 
-- **LICENSE** - This file contains the licensing information for the package.
-
 - **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc. 
 
 * **include/four_wheel_steering_controller** - This folder contains the header files for the four-wheel steering controller.
 
   -  **four_wheel_steering_controller.hpp** - Header file for the main four-wheel steering controller class, defining its interface and functions.
+
+     Joint names of the wheel joints, steering joints and geometrical values related to robot's physical structure are assigned by this code segemnet. These wheel joint names and steering joints names should match with the joints names in ros2_control.urdf
   
      ``` c++
 
@@ -476,8 +463,30 @@ After that you can able to see gazebo and rviz2 windows like this.
       std::vector<std::string> front_steering_state_names_={"rear_right_wheel_steering_joint","rear_left_wheel_steering_joint"};
 
      ```
+      
+     when initialize the command interface configuration and state interface configuration using command_interface_configuration() and state_interface_configuration() functions, make sure to maintain the below order.
 
+     ``` c++
+      // name constants for state interfacesc
+      static constexpr size_t STATE_TRACTION_FRONT_RIGHT_WHEEL = 0;
+      static constexpr size_t STATE_TRACTION_FRONT_LEFT_WHEEL = 1;
+      static constexpr size_t STATE_TRACTION_REAR_RIGHT_WHEEL = 2;
+      static constexpr size_t STATE_TRACTION_REAR_LEFT_WHEEL = 3;
+      static constexpr size_t STATE_STEER_FRONT_RIGHT_WHEEL = 4;
+      static constexpr size_t STATE_STEER_FRONT_LEFT_WHEEL = 5;
+      static constexpr size_t STATE_STEER_REAR_RIGHT_WHEEL = 6;
+      static constexpr size_t STATE_STEER_REAR_LEFT_WHEEL = 7;
 
+      // name constants for command interfaces
+      static constexpr size_t CMD_TRACTION_FRONT_RIGHT_WHEEL = 0;
+      static constexpr size_t CMD_TRACTION_FRONT_LEFT_WHEEL = 1;
+      static constexpr size_t CMD_TRACTION_REAR_RIGHT_WHEEL = 2;
+      static constexpr size_t CMD_TRACTION_REAR_LEFT_WHEEL = 3;
+      static constexpr size_t CMD_STEER_FRONT_RIGHT_WHEEL = 4;
+      static constexpr size_t CMD_STEER_FRONT_LEFT_WHEEL = 5;
+      static constexpr size_t CMD_STEER_REAR_RIGHT_WHEEL = 6;
+      static constexpr size_t CMD_STEER_REAR_LEFT_WHEEL = 7;
+      ```    
 
 
   -  **odometry.h** - Header file for the odometry class, which handles the calculation and management of the robot's odometry information.
