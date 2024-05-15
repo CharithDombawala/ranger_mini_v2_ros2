@@ -18,7 +18,7 @@ All packages in this repository have been developed, executed and tested in an U
 
 2. Go to this link,download the ranger_base.dae file and add it to src/ranger_mini_v2_description/meshes/components path
 
-[ranger_base.dae](https://drive.google.com/file/d/1_UuPcv1ym_S12IVnqwNedrEESKhfejYF/view?usp=sharing)
+    [ranger_base.dae](https://drive.google.com/file/d/1_UuPcv1ym_S12IVnqwNedrEESKhfejYF/view?usp=sharing)
 
 3. Go inside your workspace (where your downloaded src file is located).
 
