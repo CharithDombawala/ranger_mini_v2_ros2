@@ -531,7 +531,7 @@ After that you can able to see gazebo and rviz2 windows like this.
          
            The respective velocities (angular_, linear_x_, linear_y_) are computed based on the current motion mode.
 
-        -  Publishing Odometry Data:
+        -  **Publishing Odometry Data:**
            - If the current time exceeds the last state publish time plus the publish period, the function prepares and publishes the odometry message.
            - The odometry message includes position (position_x, position_y, orientation_x, orientation_y, orientation_z, orientation_w) and twist (linear and angular velocities).
            - The transform (tf_odom_pub_) is also published if enable_odom_tf_ is true.
@@ -540,7 +540,7 @@ After that you can able to see gazebo and rviz2 windows like this.
      2. **updateCommand function** 
 
          <p align="justify">
-         The FourWheelSteeringController::updateCommand function is designed to control the steering angles and wheel velocities of a four-wheel steering vehicle. The function takes in the current time and period and computes the necessary commands to update the steering and traction interfaces of the vehicle based on the current command twist inputs (linear velocities in x and y directions, and angular velocity around the z-axis).
+         The updateCommand function is designed to control the steering angles and wheel velocities of a four-wheel steering vehicle. The function takes in the current time and period and computes the necessary commands to update the steering and traction interfaces of the vehicle based on the current command twist inputs (linear velocities in x and y directions, and angular velocity around the z-axis).
          </p>
 
          Here’s a detailed breakdown of what the function does:
@@ -564,6 +564,14 @@ After that you can able to see gazebo and rviz2 windows like this.
              - **Spinning:** If there is no linear motion (lin_x and lin_y are near zero), it computes the steering angles for spinning in place.
              - **Dual Ackerman:** A fallback case where it computes the steering angles based on the vehicle's kinematic model for non-standard scenarios.
 
+             This is the genaric equation for calculating steering angles. This equation is obtained considering instantaneous center of rotation (I).
+
+             ``` c++
+              front_left_steering = atan((curr_cmd_twist.lin_y + curr_cmd_twist.ang * wheel_base_ / 2) / (curr_cmd_twist.lin_x - curr_cmd_twist.ang * track_ / 2));
+              front_right_steering = atan((curr_cmd_twist.lin_y + curr_cmd_twist.ang * wheel_base_ / 2) / (curr_cmd_twist.lin_x + curr_cmd_twist.ang * track_ / 2));
+              rear_left_steering = atan((curr_cmd_twist.lin_y - curr_cmd_twist.ang * wheel_base_ / 2) / (curr_cmd_twist.lin_x - curr_cmd_twist.ang * track_ / 2));
+              rear_right_steering = atan((curr_cmd_twist.lin_y - curr_cmd_twist.ang * wheel_base_ / 2) / (curr_cmd_twist.lin_x + curr_cmd_twist.ang * track_ / 2));
+             ```
          - **Setting Steering Angles:**
         It sets the computed steering angles to the respective command interfaces for each wheel.
 
@@ -575,7 +583,15 @@ After that you can able to see gazebo and rviz2 windows like this.
              - **Parallel Steering:** Computes velocities for straightforward motion with a common steering angle.
              - **Spinning:** Computes velocities for spinning in place.
              - **Dual Ackerman:** Computes velocities for non-standard scenarios.
-        For each mode, it also determines the direction (sign) and scaling factor (reverse) for the velocities based on the vehicle’s configuration.
+
+            For each mode, it also determines the direction (sign) and scaling factor (reverse) for the velocities based on the vehicle’s configuration.This is the genaric equation for calculating steering angles. This equation is obtained considering instantaneous center of rotation (I).
+
+             ``` c++
+             vel_left_front = reverse_fl * sign * std::hypot((curr_cmd_twist.lin_x - curr_cmd_twist.ang * track_ / 2), (curr_cmd_twist.lin_y + wheel_base_ * curr_cmd_twist.ang / 2.0)) / wheel_radius_;
+             vel_right_front = reverse_fr * sign * std::hypot((curr_cmd_twist.lin_x + curr_cmd_twist.ang * track_ / 2), (curr_cmd_twist.lin_y + wheel_base_ * curr_cmd_twist.ang / 2.0)) / wheel_radius_;
+             vel_left_rear = reverse_rl * sign * std::hypot((curr_cmd_twist.lin_x - curr_cmd_twist.ang * track_ / 2), (curr_cmd_twist.lin_y - wheel_base_ * curr_cmd_twist.ang / 2.0)) / wheel_radius_;
+             vel_right_rear = reverse_rr * sign * std::hypot((curr_cmd_twist.lin_x + curr_cmd_twist.ang * track_ / 2), (curr_cmd_twist.lin_y - wheel_base_ * curr_cmd_twist.ang / 2.0)) / wheel_radius_;
+             ```
 
         - **Setting Wheel Velocities:**
         It sets the computed wheel velocities to the respective command interfaces for each wheel.
