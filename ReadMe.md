@@ -14,7 +14,7 @@ This is a ROS2 simulation of a swerve drive robot named ranger_mini_v2. This wor
 All packages in this repository have been developed, executed and tested in an Ubuntu 22.04 machine with ROS2.0 Humble. Please set-up a ROS2.0 Humble environment in Ubuntu 22.04 and then follow the below steps to set-up your workspace.
 </p>
 
-1. Download the src file into your pc.
+1. Download src file into your pc.
 
 2. Go to this link,download the ranger_base.dae file and add it to src/ranger_mini_v2_description/meshes/components path
 
@@ -204,10 +204,6 @@ After that you can able to see gazebo and rviz2 windows like this.
                 ├── narrow_space.world                 
                 └── empty.world
 
-
-
-
-
 - **CMakeLists.txt** - This file contains the CMake configuration, which is used to build and compile the package.
 
 - **package.xml** - This file contains the package metadata for ROS, such as the package name, version, description, dependencies, etc.
@@ -333,7 +329,7 @@ After that you can able to see gazebo and rviz2 windows like this.
   - **nav2.yaml** - A YAML file containing configuration settings for the ROS 2 Navigation stack (Nav2), including path planning, costmap configurations,controller server configurations and other navigation-related parameters.
 
     <p align="justify">
-    In order to tune the robot, mainly you have to change the controller server critic weights accordingly. Please Follow MPPI controller documentation for Humble.
+    In order to tune the robot, mainly you have to change the controller server critic weights accordingly. Please Follow MPPI controller official documentation for Humble.
     </p>
 
      ```yaml
@@ -384,7 +380,7 @@ After that you can able to see gazebo and rviz2 windows like this.
             mode: 0
       ``` 
       <p align="justify">
-      The planner server in the ROS2 Navigation Stack is responsible for generating a feasible path from the robot's current position to a specified goal. It leverages algorithms to navigate through the environment while avoiding obstacles and ensuring that the path adheres to the robot's kinematic and dynamic constraints. Here, SmacPlanner2D is used as the planner server of this robot.
+      The planner server in the ROS2 Navigation Stack is responsible for generating a feasible path from the robot's current position to a specified goal. It leverages algorithms to navigate through the environment while avoiding obstacles and ensuring that the path adheres to the robot's kinematic and dynamic constraints. Here, SmacPlanner2D is used as the planner server of this robot. When tuning the robot there is no further adjustments required in planner server. It is simple path planning, because omni directional robot can able to follow any direct path between robot possition and goal.
       </p>
 
       ```yaml
@@ -424,7 +420,7 @@ After that you can able to see gazebo and rviz2 windows like this.
             A Python-based launch file to start the SLAM nodes, initializing the configurations defined in slam.yaml.
 
 
-### four_wheel_steering_controller package (Updating)
+### four_wheel_steering_controller package (In progress)
 
       four_wheel_steering_controller
             ├── CMakeLists.txt
@@ -477,6 +473,7 @@ After that you can able to see gazebo and rviz2 windows like this.
       static constexpr size_t STATE_STEER_REAR_RIGHT_WHEEL = 6;
       static constexpr size_t STATE_STEER_REAR_LEFT_WHEEL = 7;
 
+      
       // name constants for command interfaces
       static constexpr size_t CMD_TRACTION_FRONT_RIGHT_WHEEL = 0;
       static constexpr size_t CMD_TRACTION_FRONT_LEFT_WHEEL = 1;
@@ -489,17 +486,107 @@ After that you can able to see gazebo and rviz2 windows like this.
       ```    
 
 
-  -  **odometry.h** - Header file for the odometry class, which handles the calculation and management of the robot's odometry information.
+  -  **odometry.h** - Header file for the odometry class, which handles the calculation and management of the robot's odometry information. (TODO)
 
-  -  **speed_limiter.hpp** - Header file for the speed limiter class, which manages speed limits for the robot to ensure safe operation.
+  -  **speed_limiter.hpp** - Header file for the speedlimiter class, which manages speed limits for the robot to ensure safe operation.
 
   -  **visibility_control.hpp** - Header file that defines macros for controlling symbol visibility, ensuring proper linkage and symbol exportation across different platforms and compilers.
 
 
 * **src** - This folder contains the source files for the four-wheel steering controller.
 
-  -  **four_wheel_steering_controller.cpp** - Source file for the main four-wheel steering controller class, implementing its functionality.
+  -  **four_wheel_steering_controller.cpp** - Source file for the main four-wheel steering controller class, implementing its functionality. Here, we have used ros2_control approach to implement our controller. There is specific structure of fuctions, on_init, on_configure, on_activate, on_deactivte, command_interface_configuration, state_interface_configuration, update_reference_from_subscribers, update_and_write_commands. under the update_and_write_commands function there are seperate subfunctions called updateOdometry and updateCommand.
 
-  -  **odometry.cpp** - Source file for the odometry class, implementing the methods for calculating and updating the robot's odometry information.
+     1. **updateOdometry function (TODO)**
+       
+        <p align="justify">
+        The updateOdometry function calculates the robot's odometry data based on the speeds and steering angles of its wheels. This function supports different motion modes, including parallel, spinning, and dual Ackerman steering.
+        </p>
+         
+        **Key Components and Flow:**
+
+        - **Reading Wheel Speeds and Steering Angles:**  
+          - The function starts by fetching the speeds of the front-right (fr_speed), front-left (fl_speed), rear-right (rr_speed), and rear-left (rl_speed) wheels.
+          -  It also reads the steering angles for these wheels (fr_steering, fl_steering, rr_steering, rl_steering).
+          - The values are fetched using state_interfaces_ array, which is assumed to be populated with the necessary data from the wheel sensors.
+
+        - **NaN Check:** 
+          - Before proceeding with calculations, the function checks if any of the speeds or steering angles are NaN (Not-a-Number). If any value is NaN, the function returns early to avoid invalid computations.
+
+        - **Calculating Steering Positions:** 
+           - The function computes the average steering angle for the front wheels (front_steering_pos) and the rear wheels (rear_steering_pos) using a trigonometric relationship involving the tangent function.
+
+        - **Velocities Calculation:**
+          - Using the computed steering positions, the function calculates intermediate values (front_tmp, rear_tmp, etc.) that are used to determine the linear velocities of the robot.
+          - These values help account for the effects of wheel steering and the robot's geometry (wheel_base_, track_).
+          - The linear speeds for the front and rear wheels (front_linear_speed, rear_linear_speed) are calculated by taking the wheel speeds and adjusting them for the steering geometry.
+
+         - **Motion Modes:** 
+         
+            The function handles different motion modes based on the MOTION_MODE variable.
+
+            - Spinning Mode (2): In this mode, the robot spins in place. The angular velocity is calculated using the wheel speeds and the inner radius.
+            - Dual Ackerman Mode (3): This mode is for standard car-like steering where both front and rear wheels steer.
+            - Parallel Mode (1): Here, the robot moves parallel to its current orientation, with all wheels pointing in the same direction.
+         
+           The respective velocities (angular_, linear_x_, linear_y_) are computed based on the current motion mode.
+
+        -  Publishing Odometry Data:
+           - If the current time exceeds the last state publish time plus the publish period, the function prepares and publishes the odometry message.
+           - The odometry message includes position (position_x, position_y, orientation_x, orientation_y, orientation_z, orientation_w) and twist (linear and angular velocities).
+           - The transform (tf_odom_pub_) is also published if enable_odom_tf_ is true.
+   
+
+     2. **updateCommand function** 
+
+         <p align="justify">
+         The FourWheelSteeringController::updateCommand function is designed to control the steering angles and wheel velocities of a four-wheel steering vehicle. The function takes in the current time and period and computes the necessary commands to update the steering and traction interfaces of the vehicle based on the current command twist inputs (linear velocities in x and y directions, and angular velocity around the z-axis).
+         </p>
+
+         Here’s a detailed breakdown of what the function does:
+
+         - **Initialization Check:**
+        The function first checks if the command interfaces are initialized. 
+
+         - **Command Retrieval:**
+        It retrieves the current command twist (which contains linear velocities lin_x and lin_y, and angular velocity ang).
+
+         - **Command Timeout Check:**
+        It calculates the time difference between the current time and the command timestamp. If this difference exceeds a predefined timeout (cmd_vel_timeout_), it sets all wheel velocities to zero (braking) and exits early.
+
+         - **Command Validation:**
+        It checks if all three components of the command twist (lin_x, lin_y, ang) are present and logs an informational message if they are all non-zero, indicating that such a scenario is not handled.
+
+         - **Steering Angle Computation:** (number of conditions can be reduced-TODO)
+             - **Stop Condition:** If all command twist components are near zero, it logs the current steering angles without changing them.
+             - **Three Command Components:** If all three components are non-zero, it calculates the steering angles for each wheel based on the kinematic model of the vehicle.
+             - **Parallel Steering:** If there is no rotation (ang is near zero) but both linear velocities are present, it computes a common steering angle for all wheels.
+             - **Spinning:** If there is no linear motion (lin_x and lin_y are near zero), it computes the steering angles for spinning in place.
+             - **Dual Ackerman:** A fallback case where it computes the steering angles based on the vehicle's kinematic model for non-standard scenarios.
+
+         - **Setting Steering Angles:**
+        It sets the computed steering angles to the respective command interfaces for each wheel.
+
+         - **Wheel Velocity Computation:** (number of conditions can be reduced-TODO)
+
+            It uses limiters to constrain the linear and angular velocities to avoid sudden changes.Depending on the presence of command twist components, it computes the wheel velocities for different motion modes:
+
+             - **Three Command Components:** Computes velocities considering the kinematic constraints.
+             - **Parallel Steering:** Computes velocities for straightforward motion with a common steering angle.
+             - **Spinning:** Computes velocities for spinning in place.
+             - **Dual Ackerman:** Computes velocities for non-standard scenarios.
+        For each mode, it also determines the direction (sign) and scaling factor (reverse) for the velocities based on the vehicle’s configuration.
+
+        - **Setting Wheel Velocities:**
+        It sets the computed wheel velocities to the respective command interfaces for each wheel.
+
+        - **Return Condition:**
+        If all command twist components are near zero, it exits the function early after setting the necessary commands.
+
+        The function ensures that the vehicle's wheels are steered and driven according to the current command twist inputs while respecting physical and kinematic constraints, thus providing a comprehensive control mechanism for a four-wheel steering system.
+
+
+
+  -  **odometry.cpp** - Source file for the odometry class, implementing the methods for calculating and updating the robot's odometry information. (TODO)
 
   -  **speed_limiter.cpp** - Source file for the speed limiter class, implementing the logic to enforce speed limits.

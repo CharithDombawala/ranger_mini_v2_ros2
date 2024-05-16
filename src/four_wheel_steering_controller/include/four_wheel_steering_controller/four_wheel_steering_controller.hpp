@@ -73,9 +73,6 @@ public:
   FOUR_WHEEL_STEERING_CONTROLLER__VISIBILITY_PUBLIC controller_interface::InterfaceConfiguration
   state_interface_configuration() const override;
 
-  // FOUR_WHEEL_STEERING_CONTROLLER__VISIBILITY_PUBLIC bool update_odometry(
-  //   const rclcpp::Duration & period);
-
   FOUR_WHEEL_STEERING_CONTROLLER__VISIBILITY_PUBLIC controller_interface::CallbackReturn on_configure(
     const rclcpp_lifecycle::State & previous_state) override;
  
@@ -104,9 +101,6 @@ protected:
 
   controller_interface::CallbackReturn set_interface_numbers(size_t nr_state_itfs, size_t nr_cmd_itfs, size_t nr_ref_itfs);
 
-  // std::shared_ptr<four_wheel_steering_controller::ParamListener> swerve_param_listener;
-  // four_wheel_steering_controller::Params swerve_params_;
- 
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr vel_subscriber_twist_ = nullptr;
   rclcpp::Subscription<gazebo_msgs::msg::LinkStates>::SharedPtr gazebo_pose_subscription_ = nullptr;
   rclcpp::Duration ref_timeout_ = rclcpp::Duration::from_seconds(0.0);// 0ms
@@ -171,16 +165,13 @@ private:
 
   realtime_tools::RealtimeBuffer<CommandTwist> command_twist_;
   CommandTwist command_struct_twist_;
+
   double position_x;
   double position_y;
   double orientation_x;
   double orientation_y;
   double orientation_z;
   double orientation_w;
-
-
-
-   
 
   std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::msg::Odometry> > odom_pub_;
   std::shared_ptr<realtime_tools::RealtimePublisher<tf2_msgs::msg::TFMessage> > tf_odom_pub_;

@@ -92,21 +92,20 @@ namespace four_wheel_steering_controller
   controller_interface::CallbackReturn FourWheelSteeringController::on_configure(
       const rclcpp_lifecycle::State & /*previous_state*/)
   {
-    // swerve_params_ = swerve_param_listener_->get_params();
-    // odometry.set_velocity_rolling_window_size(swerve_params_.velocity_rolling_window_size);
+  
 
-    front_wheels_state_names_ = {"front_right_wheel_joint", "front_left_wheel_joint"};
-    rear_wheels_state_names_ = {"rear_right_wheel_joint", "rear_left_wheel_joint"};
-    front_steering_state_names_ = {"front_right_wheel_steering_joint", "front_left_wheel_steering_joint"};
-    rear_steering_state_names_ = {"rear_right_wheel_steering_joint", "rear_left_wheel_steering_joint"};
+    // front_wheels_state_names_ = {"front_right_wheel_joint", "front_left_wheel_joint"};
+    // rear_wheels_state_names_ = {"rear_right_wheel_joint", "rear_left_wheel_joint"};
+    // front_steering_state_names_ = {"front_right_wheel_steering_joint", "front_left_wheel_steering_joint"};
+    // rear_steering_state_names_ = {"rear_right_wheel_steering_joint", "rear_left_wheel_steering_joint"};
 
-    pose_covariance_diagonal = {0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0};
-    twist_covariance_diagonal = {0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0};
+    // pose_covariance_diagonal = {0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0};
+    // twist_covariance_diagonal = {0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0};
 
-    // if (odometry.setWheelParams(track_,wheel_steering_y_offset_,wheel_radius_,wheel_base_))
-    //  {
-    //    RCLCPP_INFO(get_node()->get_logger(), "four wheel steering odom configure successful");
-    //  }
+    // // if (odometry.setWheelParams(track_,wheel_steering_y_offset_,wheel_radius_,wheel_base_))
+    // //  {
+    // //    RCLCPP_INFO(get_node()->get_logger(), "four wheel steering odom configure successful");
+    // //  }
 
     set_interface_numbers(NR_STATE_ITFS, NR_CMD_ITFS, NR_REF_ITFS);
 
@@ -201,12 +200,6 @@ namespace four_wheel_steering_controller
     return controller_interface::CallbackReturn::SUCCESS;
   }
 
-  // bool FourWheelSteeringController::update_odometry(const rclcpp::Duration & /*period*/)
-  // {
-
-  //   RCLCPP_INFO(get_node()->get_logger(), "four wheel steering update_odometry function successful");
-  //   return true;
-  // }
 
   controller_interface::InterfaceConfiguration FourWheelSteeringController::command_interface_configuration() const
   {

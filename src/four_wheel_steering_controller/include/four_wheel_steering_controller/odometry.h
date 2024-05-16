@@ -135,12 +135,6 @@ class Odometry
 
   geometry_msgs::msg::Quaternion odom_quat;
 
-  //struct GetEntityState : rclcpp::Service<gazebo_msgs::srv::GetEntityState> {};
-
-  //std::tuple<double, double, double> getPose(const std::string& robot_name, rclcpp::Node::SharedPtr nh); 
-  
-  //double callback(const geometry_msgs::msg::LinkState::SharedPtr msg);
-
   private:
 
   geometry_msgs::msg::Quaternion createQuaternionMsgFromYaw(double yaw);
