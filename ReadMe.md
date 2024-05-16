@@ -564,7 +564,7 @@ After that you can able to see gazebo and rviz2 windows like this.
              - **Spinning:** If there is no linear motion (lin_x and lin_y are near zero), it computes the steering angles for spinning in place.
              - **Dual Ackerman:** A fallback case where it computes the steering angles based on the vehicle's kinematic model for non-standard scenarios.
 
-             This is the genaric equation for calculating steering angles. This equation is obtained considering instantaneous center of rotation (I).
+             This is the genaric equation for calculating steering angles. This equation is obtained by considering instantaneous center of rotation (I).
 
              ``` c++
               front_left_steering = atan((curr_cmd_twist.lin_y + curr_cmd_twist.ang * wheel_base_ / 2) / (curr_cmd_twist.lin_x - curr_cmd_twist.ang * track_ / 2));
@@ -582,9 +582,9 @@ After that you can able to see gazebo and rviz2 windows like this.
              - **Three Command Components:** Computes velocities considering the kinematic constraints.
              - **Parallel Steering:** Computes velocities for straightforward motion with a common steering angle.
              - **Spinning:** Computes velocities for spinning in place.
-             - **Dual Ackerman:** Computes velocities for non-standard scenarios.
+             - **Dual Ackerman:** Computes velocities for non-standard scenarios. 
 
-            For each mode, it also determines the direction (sign) and scaling factor (reverse) for the velocities based on the vehicle’s configuration.This is the genaric equation for calculating steering angles. This equation is obtained considering instantaneous center of rotation (I).
+            For each mode, it also determines the direction (sign) and scaling factor (reverse) for the velocities based on the vehicle’s configuration.This is the genaric equation for calculating wheel rotational velocities. This equation is obtained by considering instantaneous center of rotation (I).
 
              ```cpp
              vel_left_front = reverse_fl * sign * std::hypot((curr_cmd_twist.lin_x - curr_cmd_twist.ang * track_ / 2), (curr_cmd_twist.lin_y + wheel_base_ * curr_cmd_twist.ang / 2.0)) / wheel_radius_;
