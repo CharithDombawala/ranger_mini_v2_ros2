@@ -586,7 +586,7 @@ After that you can able to see gazebo and rviz2 windows like this.
 
             For each mode, it also determines the direction (sign) and scaling factor (reverse) for the velocities based on the vehicle’s configuration.This is the genaric equation for calculating steering angles. This equation is obtained considering instantaneous center of rotation (I).
 
-             ``` c++
+             ```cpp
              vel_left_front = reverse_fl * sign * std::hypot((curr_cmd_twist.lin_x - curr_cmd_twist.ang * track_ / 2), (curr_cmd_twist.lin_y + wheel_base_ * curr_cmd_twist.ang / 2.0)) / wheel_radius_;
              vel_right_front = reverse_fr * sign * std::hypot((curr_cmd_twist.lin_x + curr_cmd_twist.ang * track_ / 2), (curr_cmd_twist.lin_y + wheel_base_ * curr_cmd_twist.ang / 2.0)) / wheel_radius_;
              vel_left_rear = reverse_rl * sign * std::hypot((curr_cmd_twist.lin_x - curr_cmd_twist.ang * track_ / 2), (curr_cmd_twist.lin_y - wheel_base_ * curr_cmd_twist.ang / 2.0)) / wheel_radius_;
