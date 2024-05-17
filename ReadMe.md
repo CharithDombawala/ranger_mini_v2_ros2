@@ -611,7 +611,7 @@ After that you can able to see gazebo and rviz2 windows like this.
                   //odom_frame.transform.rotation.y = orientation_y;
                   //odom_frame.transform.rotation.z = orientation_z;
                   //odom_frame.transform.rotation.w = orientation_w;
-                  ```
+              ```
 
      2. **updateCommand function** 
 
