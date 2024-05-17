@@ -486,7 +486,9 @@ After that you can able to see gazebo and rviz2 windows like this.
       ```    
 
 
-  -  **odometry.h** - Header file for the odometry class, which handles the calculation and management of the robot's odometry information. (TODO)
+  -  **odometry.h** - Header file for the odometry class, which handles the calculation and management of the robot's odometry information. (TODO - update the implementation to reflect the recent changes in the controller).
+
+     The [kinematics_model.hpp](https://github.com/westonrobot/ranger_ros2/blob/master/ranger_base/include/ranger_base/kinematics_model.hpp) was used as a reference.
 
   -  **speed_limiter.hpp** - Header file for the speedlimiter class, which manages speed limits for the robot to ensure safe operation.
 
@@ -497,10 +499,12 @@ After that you can able to see gazebo and rviz2 windows like this.
 
   -  **four_wheel_steering_controller.cpp** - Source file for the main four-wheel steering controller class, implementing its functionality. Here, we have used ros2_control approach to implement our controller. There is specific structure of fuctions, on_init, on_configure, on_activate, on_deactivte, command_interface_configuration, state_interface_configuration, update_reference_from_subscribers, update_and_write_commands. under the update_and_write_commands function there are seperate subfunctions called updateOdometry and updateCommand.
 
-     1. **updateOdometry function (TODO)**
+     1. **updateOdometry function (TODO - update the implementation to reflect the recent changes in the controller).**
        
         <p align="justify">
         The updateOdometry function calculates the robot's odometry data based on the speeds and steering angles of its wheels. This function supports different motion modes, including parallel, spinning, and dual Ackerman steering.
+
+        The UpdateOdometry function in [ranger_messenger.cpp](https://github.com/westonrobot/ranger_ros2/blob/master/ranger_base/src/ranger_messenger.cpp) was used as a reference. 
         </p>
          
         **Key Components and Flow:**
@@ -537,6 +541,36 @@ After that you can able to see gazebo and rviz2 windows like this.
            - The transform (tf_odom_pub_) is also published if enable_odom_tf_ is true.
    
 
+            In existing code we are using odometry data form gazebo.In order to swith between calculated odometry and gazebo ideal odometry, uncomment below lines in updateOdometry function accordingly.
+
+            In order to use ideal odometry,
+
+            ```cpp
+            // odom_pub_->msg_.pose.pose.position.x = odometry.getX();
+            // odom_pub_->msg_.pose.pose.position.y = odometry.getY();
+            //odom_pub_->msg_.pose.pose.orientation = odometry.get_orientation();
+            odom_pub_->msg_.pose.pose.position.x = position_x;
+            odom_pub_->msg_.pose.pose.position.y = position_y;
+            odom_pub_->msg_.pose.pose.position.z = 0.0;
+            odom_pub_->msg_.pose.pose.orientation.x = orientation_x;
+            odom_pub_->msg_.pose.pose.orientation.y = orientation_y;
+            odom_pub_->msg_.pose.pose.orientation.z = orientation_z;
+            odom_pub_->msg_.pose.pose.orientation.w = orientation_w;
+            ```
+            In order to use calculated odometry,
+
+            ```cpp
+            odom_pub_->msg_.pose.pose.position.x = odometry.getX();
+            odom_pub_->msg_.pose.pose.position.y = odometry.getY();
+            odom_pub_->msg_.pose.pose.orientation = odometry.get_orientation();
+            //odom_pub_->msg_.pose.pose.position.x = position_x;
+            //odom_pub_->msg_.pose.pose.position.y = position_y;
+            //odom_pub_->msg_.pose.pose.position.z = 0.0;
+            //odom_pub_->msg_.pose.pose.orientation.x = orientation_x;
+            //odom_pub_->msg_.pose.pose.orientation.y = orientation_y;
+            //odom_pub_->msg_.pose.pose.orientation.z = orientation_z;
+            //odom_pub_->msg_.pose.pose.orientation.w = orientation_w;
+            ```
      2. **updateCommand function** 
 
          <p align="justify">
@@ -602,7 +636,8 @@ After that you can able to see gazebo and rviz2 windows like this.
         The function ensures that the vehicle's wheels are steered and driven according to the current command twist inputs while respecting physical and kinematic constraints, thus providing a comprehensive control mechanism for a four-wheel steering system.
 
 
+  -  **odometry.cpp** -  This source file contains the implementation of the odometry class, which includes methods for calculating and updating the robot's odometry information. (TODO - update the implementation to reflect the recent changes in the controller).
 
-  -  **odometry.cpp** - Source file for the odometry class, implementing the methods for calculating and updating the robot's odometry information. (TODO)
+      The UpdateOdometry function in [ranger_messenger.cpp](https://github.com/westonrobot/ranger_ros2/blob/master/ranger_base/src/ranger_messenger.cpp) was used as a reference. 
 
   -  **speed_limiter.cpp** - Source file for the speed limiter class, implementing the logic to enforce speed limits.
