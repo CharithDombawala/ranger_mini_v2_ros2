@@ -538,39 +538,70 @@ After that you can able to see gazebo and rviz2 windows like this.
         -  **Publishing Odometry Data:**
            - If the current time exceeds the last state publish time plus the publish period, the function prepares and publishes the odometry message.
            - The odometry message includes position (position_x, position_y, orientation_x, orientation_y, orientation_z, orientation_w) and twist (linear and angular velocities).
+
+             In existing code we are using odometry data form gazebo.In order to swith between calculated odometry and gazebo ideal odometry, uncomment below lines in updateOdometry function accordingly.
+
+             In order to use ideal odometry,
+
+             ```cpp
+                  // odom_pub_->msg_.pose.pose.position.x = odometry.getX();
+                  // odom_pub_->msg_.pose.pose.position.y = odometry.getY();
+                  //odom_pub_->msg_.pose.pose.orientation = odometry.get_orientation();
+                  odom_pub_->msg_.pose.pose.position.x = position_x;
+                  odom_pub_->msg_.pose.pose.position.y = position_y;
+                  odom_pub_->msg_.pose.pose.position.z = 0.0;
+                  odom_pub_->msg_.pose.pose.orientation.x = orientation_x;
+                  odom_pub_->msg_.pose.pose.orientation.y = orientation_y;
+                  odom_pub_->msg_.pose.pose.orientation.z = orientation_z;
+                  odom_pub_->msg_.pose.pose.orientation.w = orientation_w;
+              ```
+
+              In order to use calculated odometry,
+
+              ```cpp
+                  odom_pub_->msg_.pose.pose.position.x = odometry.getX();
+                  odom_pub_->msg_.pose.pose.position.y = odometry.getY();
+                  odom_pub_->msg_.pose.pose.orientation = odometry.get_orientation();
+                  //odom_pub_->msg_.pose.pose.position.x = position_x;
+                  //odom_pub_->msg_.pose.pose.position.y = position_y;
+                  //odom_pub_->msg_.pose.pose.position.z = 0.0;
+                  //odom_pub_->msg_.pose.pose.orientation.x = orientation_x;
+                  //odom_pub_->msg_.pose.pose.orientation.y = orientation_y;
+                  //odom_pub_->msg_.pose.pose.orientation.z = orientation_z;
+                  //odom_pub_->msg_.pose.pose.orientation.w = orientation_w;
+                  ```
            - The transform (tf_odom_pub_) is also published if enable_odom_tf_ is true.
    
+             In order to swith between calculated odometry and gazebo ideal odometry, uncomment below lines in updateOdometry function accordingly.
 
-            In existing code we are using odometry data form gazebo.In order to swith between calculated odometry and gazebo ideal odometry, uncomment below lines in updateOdometry function accordingly.
+             In order to use ideal odometry,
 
-            In order to use ideal odometry,
+             ```cpp
+                  // odom_frame.transform.translation.x = odometry.getX();
+                  // odom_frame.transform.translation.y = odometry.getY();
+                  // odom_frame.transform.rotation = odometry.get_orientation();
+                  odom_frame.transform.translation.x = position_x;
+                  odom_frame.transform.translation.y = position_y;
+                  odom_frame.transform.rotation.x = orientation_x;
+                  odom_frame.transform.rotation.y = orientation_y;
+                  odom_frame.transform.rotation.z = orientation_z;
+                  odom_frame.transform.rotation.w = orientation_w;
+              ```
 
-            ```cpp
-            // odom_pub_->msg_.pose.pose.position.x = odometry.getX();
-            // odom_pub_->msg_.pose.pose.position.y = odometry.getY();
-            //odom_pub_->msg_.pose.pose.orientation = odometry.get_orientation();
-            odom_pub_->msg_.pose.pose.position.x = position_x;
-            odom_pub_->msg_.pose.pose.position.y = position_y;
-            odom_pub_->msg_.pose.pose.position.z = 0.0;
-            odom_pub_->msg_.pose.pose.orientation.x = orientation_x;
-            odom_pub_->msg_.pose.pose.orientation.y = orientation_y;
-            odom_pub_->msg_.pose.pose.orientation.z = orientation_z;
-            odom_pub_->msg_.pose.pose.orientation.w = orientation_w;
-            ```
-            In order to use calculated odometry,
+              In order to use calculated odometry,
 
-            ```cpp
-            odom_pub_->msg_.pose.pose.position.x = odometry.getX();
-            odom_pub_->msg_.pose.pose.position.y = odometry.getY();
-            odom_pub_->msg_.pose.pose.orientation = odometry.get_orientation();
-            //odom_pub_->msg_.pose.pose.position.x = position_x;
-            //odom_pub_->msg_.pose.pose.position.y = position_y;
-            //odom_pub_->msg_.pose.pose.position.z = 0.0;
-            //odom_pub_->msg_.pose.pose.orientation.x = orientation_x;
-            //odom_pub_->msg_.pose.pose.orientation.y = orientation_y;
-            //odom_pub_->msg_.pose.pose.orientation.z = orientation_z;
-            //odom_pub_->msg_.pose.pose.orientation.w = orientation_w;
-            ```
+              ```cpp
+                  odom_frame.transform.translation.x = odometry.getX();
+                  odom_frame.transform.translation.y = odometry.getY();
+                  odom_frame.transform.rotation = odometry.get_orientation();
+                  //odom_frame.transform.translation.x = position_x;
+                  //odom_frame.transform.translation.y = position_y;
+                  //odom_frame.transform.rotation.x = orientation_x;
+                  //odom_frame.transform.rotation.y = orientation_y;
+                  //odom_frame.transform.rotation.z = orientation_z;
+                  //odom_frame.transform.rotation.w = orientation_w;
+                  ```
+
      2. **updateCommand function** 
 
          <p align="justify">
