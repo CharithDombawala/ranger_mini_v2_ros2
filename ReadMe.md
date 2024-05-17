@@ -506,7 +506,7 @@ After that you can able to see gazebo and rviz2 windows like this.
 * **src** - This folder contains the source files for the four-wheel steering controller.
   
   <p align="justify">
-  
+
   -  **four_wheel_steering_controller.cpp** - Source file for the main four-wheel steering controller class, implementing its functionality. Here, we have used ros2_control approach to implement our controller. There is specific structure of fuctions, on_init, on_configure, on_activate, on_deactivte, command_interface_configuration, state_interface_configuration, update_reference_from_subscribers, update_and_write_commands. under the update_and_write_commands function there are seperate subfunctions called updateOdometry and updateCommand.
   </p>
 
@@ -580,7 +580,7 @@ After that you can able to see gazebo and rviz2 windows like this.
                   //odom_pub_->msg_.pose.pose.orientation.y = orientation_y;
                   //odom_pub_->msg_.pose.pose.orientation.z = orientation_z;
                   //odom_pub_->msg_.pose.pose.orientation.w = orientation_w;
-                  ```
+              ```
            - The transform (tf_odom_pub_) is also published if enable_odom_tf_ is true.
    
              In order to swith between calculated odometry and gazebo ideal odometry, uncomment below lines in updateOdometry function accordingly.
