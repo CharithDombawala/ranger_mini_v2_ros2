@@ -419,6 +419,14 @@ After that you can able to see gazebo and rviz2 windows like this.
    - **slam.launch.py**
             A Python-based launch file to start the SLAM nodes, initializing the configurations defined in slam.yaml.
 
+    To tune the robot, you can use dynamic reconfigure tool.
+
+      1. Run this command in new termianl.
+
+             rqt
+      2. Go to the Plugins > Configurations > Dynamic Reconfigure.
+
+      3. Now you can change the parameters and observe the changes dynamically.
 
 ### four_wheel_steering_controller package (In progress)
 

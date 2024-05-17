@@ -487,6 +487,9 @@ namespace four_wheel_steering_controller
       {
         geometry_msgs::msg::TransformStamped &odom_frame = tf_odom_pub_->msg_.transforms[0];
         odom_frame.header.stamp = time;
+        // odom_frame.transform.translation.x = odometry.getX();
+        // odom_frame.transform.translation.y = odometry.getY();
+        // odom_frame.transform.rotation = odometry.get_orientation();
         odom_frame.transform.translation.x = position_x;
         odom_frame.transform.translation.y = position_y;
         odom_frame.transform.rotation.x = orientation_x;
