@@ -630,7 +630,7 @@ After that you can able to see gazebo and rviz2 windows like this.
          - **Command Validation:**
         It checks if all three components of the command twist (lin_x, lin_y, ang) are present and logs an informational message if they are all non-zero, indicating that such a scenario is not handled.
 
-         - **Steering Angle Computation:** (number of conditions can be reduced-TODO)
+         - **Steering Angle Computation: (number of conditions can be reduced-TODO)**
              - **Stop Condition:** If all command twist components are near zero, it logs the current steering angles without changing them.
              - **Three Command Components:** If all three components are non-zero, it calculates the steering angles for each wheel based on the kinematic model of the vehicle.
              - **Parallel Steering:** If there is no rotation (ang is near zero) but both linear velocities are present, it computes a common steering angle for all wheels.
@@ -648,7 +648,7 @@ After that you can able to see gazebo and rviz2 windows like this.
          - **Setting Steering Angles:**
         It sets the computed steering angles to the respective command interfaces for each wheel.
 
-         - **Wheel Velocity Computation:** (number of conditions can be reduced-TODO)
+         - **Wheel Velocity Computation:(number of conditions can be reduced-TODO)**
 
             It uses limiters to constrain the linear and angular velocities to avoid sudden changes.Depending on the presence of command twist components, it computes the wheel velocities for different motion modes:
 
