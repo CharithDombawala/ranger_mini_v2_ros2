@@ -424,7 +424,7 @@ After that you can able to see gazebo and rviz2 windows like this.
       1. Run this command in new termianl.
 
              rqt
-      2. Go to the Plugins > Configurations > Dynamic Reconfigure.
+      2. Go to the **Plugins** > **Configurations** > **Dynamic Reconfigure**.
 
       3. Now you can change the parameters and observe the changes dynamically.
 
