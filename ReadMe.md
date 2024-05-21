@@ -324,6 +324,14 @@ After that you can able to see gazebo and rviz2 windows like this.
             # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
             yaml_filename: "/home/charith-2204/ranger_mini_v2/src/ranger_mini_v2_gazebo/map/map.yaml"
       ```  
+      
+      Note:
+
+      Once you have succecfully navigated  through the environment using slam, then launch the map_saver node(you have to install the package ***nav2_map_server**  first) in the nav2_map_server package to create map files. The map file is saved in the directory where the map_saver node is launched at. Unless a specific file name is provided, map will be used as a default file name and create map.pgm and map.yaml.
+
+        ros2 run nav2_map_server map_saver_cli -f ~/map 
+      
+      The -f option specifies a folder location and a file name where files to be saved. With the above command, map.pgm and map.yaml will be saved in the home folder ~/(/home/${username}).
 
 
   - **nav2.yaml** - A YAML file containing configuration settings for the ROS 2 Navigation stack (Nav2), including path planning, costmap configurations,controller server configurations and other navigation-related parameters.
@@ -411,7 +419,7 @@ After that you can able to see gazebo and rviz2 windows like this.
 
 *  **launch** - This folder contains launch files for starting various navigation-related nodes.
 
-   - **localization.launch.py** - A Python-based launch file to start the localization nodes, initializing the configurations defined in localization.yaml.
+   - **localization.launch.py** - A Python-based launch file to start the localization nodes, initializing the configurations defined in localization.yaml. If you are using different map, then you have to change the path accordingly.
 
    - **nav2.launch.py**
             A Python-based launch file to start the Nav2 stack, initializing the configurations defined in nav2.yaml.

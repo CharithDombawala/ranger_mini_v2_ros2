@@ -38,10 +38,10 @@ def generate_launch_description():
     params = {'robot_description': doc.toxml()}
 
     use_simulator = LaunchConfiguration('use_simulator')
-    #world = os.path.join(ranger_pkg,'worlds', 'turtlebot3_house.world') 
+    world = os.path.join(ranger_pkg,'worlds', 'turtlebot3_house.world') 
     # world = os.path.join(ranger_pkg,'worlds', 'with_narrow_spaces.world') 
     # world = os.path.join(ranger_pkg,'worlds', 'withnarrowspace.world')
-    world = os.path.join(ranger_pkg,'worlds', 'narrow_space.world') 
+    # world = os.path.join(ranger_pkg,'worlds', 'narrow_space.world') 
     #world='with_narrow_spaces.world'
     headless = LaunchConfiguration('headless')
     
