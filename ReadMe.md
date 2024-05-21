@@ -56,7 +56,7 @@ All packages in this repository have been developed, executed and tested in an U
 
       **Note:**
 
-      If you have pre-build map, then you can directly use localization without slam.
+      If you have pre-build map, then you can directly use localization. Launch localization.launch.py instead of launching slam.launch.py.
 
          ros2 launch ranger_mini_v2_navigation localization.launch.py use_sim_time:=true
 
