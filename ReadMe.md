@@ -328,7 +328,9 @@ After that you can able to see gazebo and rviz2 windows like this.
       **Note:**
 
       <p align="justify">
+
       Once you have succecfully navigated  through the environment using slam, then launch the map_saver node(you have to install the package **nav2_map_server**  first) in the nav2_map_server package to create map files. The map file is saved in the directory where the map_saver node is launched at. Unless a specific file name is provided, map will be used as a default file name and create map.pgm and map.yaml.
+      
       </p>
 
         ros2 run nav2_map_server map_saver_cli -f ~/map 
