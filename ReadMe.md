@@ -54,6 +54,11 @@ All packages in this repository have been developed, executed and tested in an U
    
          ros2 launch ranger_mini_v2_navigation nav2.launch.py use_sim_time:=true
 
+      **Note:**
+
+      If you have pre-build map, then you can directly use localization without slam.
+
+         ros2 launch ranger_mini_v2_navigation localization.launch.py use_sim_time:=true
 
 After that you can able to see gazebo and rviz2 windows like this.
 
@@ -328,7 +333,7 @@ After that you can able to see gazebo and rviz2 windows like this.
       **Note:**
 
       <p align="justify">
-      
+
       Once you have succecfully navigated  through the environment using slam, then launch the map_saver node (you have to install  **nav2_map_server** package.) in the nav2_map_server package to create map files. The map file is saved in the directory where the map_saver node is launched at. Unless a specific file name is provided, map will be used as a default file name and create map.pgm and map.yaml.
 
       </p>
