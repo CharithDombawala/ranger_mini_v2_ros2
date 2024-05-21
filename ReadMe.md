@@ -24,7 +24,7 @@ All packages in this repository have been developed, executed and tested in an U
 
    Example: 
 
-        home
+        Home
           └── ranger_mini_v2
           ├──    └── src
           .
