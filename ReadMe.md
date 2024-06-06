@@ -18,7 +18,7 @@ All packages in this repository have been developed, executed and tested in an U
 
 2. Go to this link,download the ranger_base.dae file and add it to src/ranger_mini_v2_description/meshes/components path
 
-    [ranger_base.dae](https://drive.google.com/file/d/1_UuPcv1ym_S12IVnqwNedrEESKhfejYF/view?usp=sharing)
+    [ranger_base.dae](https://drive.google.com/file/d/1B7ZJPPz2aU2LCg8LmA0bvREysHXdZWXm/view?usp=sharing)
 
 3. Go inside your workspace (where your downloaded src file is located).
 
@@ -68,9 +68,9 @@ After that you can able to see gazebo and rviz2 windows like this.
 ![](image_2.png)
 
 
-[Simulation video-1](https://drive.google.com/file/d/1kGQDAgb77I5bMFVlKN86udLNigSDjU7L/view?usp=sharing)
+[Simulation video-1](https://drive.google.com/file/d/1cjlKX6tuHPv9x_ObDGAYa2-lktekSTjY/view?usp=sharing)
 
-[Simulation video-2](https://drive.google.com/file/d/1DRm593709AjEyMUHWVXXF5L8cFRlZKf_/view?usp=sharing)
+[Simulation video-2](https://drive.google.com/file/d/1TRs5bYfALDXLMLwDkhTFbywUeE0j6xjI/view?usp=sharing)
 
 # Architecture
 
